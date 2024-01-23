@@ -4,7 +4,7 @@ import {toast} from 'react-toastify'
 
 const BookingCard = ({booking}) => {
     const {tourName, totalPrice, maxGroupSize, date, _id} = booking;
-
+    console.log(booking)
     const deleteBooking = async()=> {
       try {
         const response = await fetch(`${BASE_URL}/booking/${_id}`, {
