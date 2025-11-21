@@ -10,8 +10,7 @@ const useFetch = (url) => {
                 const response = await fetch(url)
                 
                 if(!response.ok){
-                    setError('failed to fetch') 
-                    // toast.error(error)           
+                    setError('failed to fetch')            
                 }
         
                 const result = await response.json()

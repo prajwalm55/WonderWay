@@ -1,157 +1,186 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "tailwindcss/tailwind.css";
-import card01 from "../assets/images/gallery-01.jpg";
-import card02 from "../assets/images/gallery-02.jpg";
-import card03 from "../assets/images/gallery-03.jpg";
-import icon01 from "../assets/images/icon01.png";
-import icon02 from "../assets/images/icon02.png";
-import icon03 from "../assets/images/icon03.png";
-import SearchBar from "../shared/searchBar/SearchBar";
+import HeroExplore from "../components/Hero/HeroExplore";
 import ServicesList from "../components/services/ServicesList";
 import FeaturedTourList from "../components/featruredTour/FeaturedTourList";
-import { Link } from "react-router-dom";
-import { BsArrowRight } from "react-icons/bs";
 import FaqList from "../components/Faq/FaqList";
 import Testimonials from "../components/Testimonials/Testimonials";
-import faqImg from "../assets/images/experience.png";
 import ImagesGallery from "../components/Gallery/Gallery";
+import back4 from "../assets/images/bac4.png";
 
-const Home = () => {
+const HEADER_HEIGHT = 80;
+const FOOTER_HEIGHT = 200;
+
+const Home = ({ galleryScrollRef }) => {
+  const [scrollY, setScrollY] = useState(0);
+  const galleryRef = useRef(null);
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY * 0.2);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (galleryScrollRef) {
+      galleryScrollRef.current = () => {
+        galleryRef.current?.scrollIntoView({ behavior: "smooth" });
+      };
+    }
+  }, [galleryScrollRef]);
+
+  const premiumBackground = {
+    background:
+      "linear-gradient(145deg, rgba(0,41,31,1), rgba(0,77,47,1), rgba(0,50,35,1))",
+    marginTop: "-3px",
+    minHeight: `calc(100vh - ${HEADER_HEIGHT + FOOTER_HEIGHT}px)`,
+    position: "relative",
+    overflow: "hidden",
+  };
+
+  const topFogStyle = {
+    background:
+      "linear-gradient(to bottom, rgba(0,41,31,0.9), rgba(0,60,40,0.6), rgba(0,77,47,0.3), rgba(0,77,47,0))",
+    filter: "blur(2px)",
+    opacity: 0.8,
+  };
+
+  const fixedBgStyle = {
+    backgroundImage: `url(${back4})`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundAttachment: "fixed",
+    opacity: 0.15,
+    filter: "blur(1px)",
+  };
+
+  const overlayStyle = {
+    background: "linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.35))",
+    backdropFilter: "blur(2px)",
+  };
+
+  const headingStyle = {
+    fontFamily: "'Cinzel', serif",
+    color: "#e3f7e3",
+    lineHeight: "1.2",
+  };
+
   return (
-    <>
-      <div className="min-h-screen bg-cover md:pt-4 px-6 md:px-12 bg-center">
-        {/* {Search Section Starts} */}
-        <div className="grid md:grid-cols-2 gap-8">
-          <div>
-            <div className="my-8">
-              <h1 className="text-[33px] font-cursiveFont text-center md:text-[40px] md:text-start font-bold mb-4 ">
-                Plan Your Perfect Trip with{" "}
-                <span className="text-BaseColor text-[40px] font-cursiveFont">
-                  TripsTravel
-                </span>
-              </h1>
-              <p className="text-lg leading-8 text-gray-800 hidden md:block">
-                "Welcome to TripsTravel, your go-to destination for
-                unforgettable adventures! Explore diverse destinations, plan
-                seamlessly, and embark on a journey of a lifetime. Discover
-                handpicked accommodations, connect with like-minded travelers,
-                and create lasting memories. Your next adventure awaits with
-                TripsTravel!"
-              </p>
+    <div
+      style={{
+        minHeight: `calc(100vh - ${HEADER_HEIGHT + FOOTER_HEIGHT}px)`,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <HeroExplore />
 
-              <p className="mobpara md:hidden ">
-                "Welcome to TripsTravel, your go-to destination for
-                unforgettable adventures! Explore diverse destinations, plan
-                seamlessly, and embark on a journey of a lifetime."
-              </p>
-            </div>
-          </div>
-          <div className="gap-4 grid grid-cols-3 min-h-[200px]">
-            <div className="rounded-lg my-8 overflow-hidden">
-              <img src={card01} className="object-cover h-full" alt="" />
-            </div>
+      <section
+        className="flex flex-col justify-center items-center text-center px-6 md:px-12 py-8"
+        style={premiumBackground}
+      >
+        <div
+          className="absolute top-0 left-0 w-full h-16 z-20 pointer-events-none"
+          style={topFogStyle}
+        ></div>
+        <div className="absolute inset-0 z-0" style={fixedBgStyle}></div>
+        <div className="absolute inset-0 z-0" style={overlayStyle}></div>
 
-            <div className="rounded-lg  overflow-hidden">
-              <img src={card02} className="object-cover h-full" alt="" />
-            </div>
-
-            <div className="rounded-lg my-8 overflow-hidden">
-              <img src={card03} className="object-cover h-full" alt="" />
-            </div>
-          </div>
+        <div className="text-center mb-4 relative z-20">
+          <h2
+            className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-wide mb-6 text-center"
+            style={headingStyle}
+          >
+            Our <span style={{ color: "#00a86b" }}>Premium Services</span>
+          </h2>
+          <p
+            className="mt-2 text-base md:text-lg lg:text-xl max-w-2xl mx-auto"
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              color: "#e3f7e3",
+              letterSpacing: "0.5px",
+            }}
+          >
+            Unrivaled services crafted to elevate your travel experience.
+          </p>
         </div>
-        <SearchBar />
-      </div>
 
-      {/* {Services Section Starts} */}
-      <section className="pb-12 px-6 md:px-12">
-        <div className="container mx-auto mt-8 flex-col flex md:flex-row">
-          <div className="mb-6 flex-shrink-0 mx-4 flex-1 min-w-[30%]">
-            <h2 className="text-[33px] md:text-[40px] font-cursiveFont font-bold mb-4 text-center">
-              Our{" "}
-              <span className="text-BaseColor text-[43px] font-cursiveFont">
-                Best Services
-              </span>
-            </h2>
-            <p className="para md:text-lg md:leading-8 md:text-start md:text-gray-800">
-              "Empowering Your Journey: Unrivaled Services Tailored to Elevate
-              Your Experience."
-            </p>
-            {/* Add Slider Component or Carousel Component if needed */}
-          </div>
-          <ServicesList className="flex-grow" />
+        <div className="relative z-20 w-full flex flex-wrap justify-center gap-6 md:gap-8 mt-4">
+          <ServicesList />
         </div>
       </section>
 
-      {/* {Gallery Section Start} */}
-      <section className="py-8 text-center px-6 md:px-12">
-        <h1 className="text-[33px] md:text-[40px] font-cursiveFont font-bold mb-4 text-center">
-          Our{" "}
-          <span className="text-BaseColor text-[40px] font-cursiveFont">
-            Gallery
-          </span>
-        </h1>
-        <p className="text-lg leading-8 mb-8 text-gray-800">
-          "Unveil travel wonders in our gallery, a snapshot of TripsTravel's
-          adventures."
-        </p>
+      <section ref={galleryRef} className="w-full m-0 p-0">
         <ImagesGallery />
       </section>
-      {/* {Gallery Section Ends} */}
-      <section className="min-h-screen py-8 px-6 md:px-12">
-        <h1 className="text-[40px] md:text-[40px] font-cursiveFont font-bold mb-4 text-center text-BaseColor">
-          Featured Tours
-        </h1>
-        <p className="para md:text-lg md:leading-8 md:text-gray-800">
-          "Embark on Unforgettable Journeys: Discover Our Featured Tours, Where
-          Adventure Meets Extraordinary Experiences."
-        </p>
-        <div className="">
+
+      <section
+        className="py-9 px-6 md:px-12 relative"
+        style={{
+          background:
+            "linear-gradient(180deg, #00291F 0%, #004D2F 50%, #003223 100%)",
+        }}
+        id="tours-section"
+      >
+        <div className="text-center relative z-20 mb-8">
+          <h2
+            className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-wide mb-6 text-center"
+            style={headingStyle}
+          >
+            Explore <span style={{ color: "#00a86b" }}>Featured Tours</span>
+          </h2>
+          <p
+            className="mt-2 text-base md:text-lg lg:text-xl max-w-2xl mx-auto"
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              color: "#e3f7e3",
+              letterSpacing: "0.5px",
+            }}
+          >
+            Embark on extraordinary journeys with our handpicked featured tours.
+          </p>
+        </div>
+        <div className="relative z-20 w-full flex flex-wrap justify-center gap-6 md:gap-8 mt-4">
           <FeaturedTourList />
         </div>
       </section>
-      {/* {Featured seactiton ends} */}
 
-      {/* {Testimonials section start} */}
-      <section className=" md:max-h-[550px]">
-        <div className="py-8 px-6 md:px-12">
-          <div className="mx-auto text-center xl:w-[470px]">
-            <h1 className="text-[33px] md:text-[40px] font-cursiveFont font-bold mb-4 text-center ">
-              Our{" "}
-              <span className="text-BaseColor text-[40px] font-cursiveFont ">
-                Reviews
-              </span>
-            </h1>
-            <p className="text-lg font-paraFont font-bold leading-8 mb-8 text-gray-800">
-              "Read what our travelers have to say in their own words. Real
-              stories, real experiences."
-            </p>
-          </div>
+      <section
+        className="flex flex-col justify-center items-center text-center px-6 md:px-12 py-14 relative"
+        style={premiumBackground}
+      >
+        <div
+          className="absolute top-0 left-0 w-full h-16 pointer-events-none"
+          style={topFogStyle}
+        ></div>
+        <div className="absolute inset-0 z-0" style={fixedBgStyle}></div>
+        <div className="absolute inset-0 z-0" style={overlayStyle}></div>
+
+        <div className="relative z-20 max-w-6xl w-full">
+          <h2
+            className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-wide mb-6 text-center"
+            style={headingStyle}
+          >
+            Our <span style={{ color: "#00a86b" }}>Reviews</span>
+          </h2>
+          <p
+            className="mt-2 text-base md:text-lg lg:text-xl max-w-2xl mx-auto"
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              color: "#e3f7e3",
+              letterSpacing: "0.5px",
+            }}
+          >
+            Hear from our travelers about their unforgettable experiences with
+            Travely.
+          </p>
           <Testimonials />
         </div>
       </section>
-      {/* {Testimonials section ends} */}
 
-      {/* {faq Section Start} */}
-      <section>
-        <div className="px-6 md:px-12 py-6">
-          <div className="flex justify-between gap-[50px] lg:gap-0">
-            <div className="w-1/2 hidden md:block">
-              <img src={faqImg} alt="" />
-            </div>
-
-            <div className="w-full md:w-1/2">
-              <h2 className="text-3xl text-BaseColor font-cursiveFont  font-bold text-center">
-                Frequently Asked Question.
-              </h2>
-
-              <FaqList />
-            </div>
-          </div>
-        </div>
-      </section>
-      {/* {faq Section ends} */}
-    </>
+      <FaqList />
+    </div>
   );
 };
 

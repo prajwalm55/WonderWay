@@ -1,98 +1,81 @@
 import React, { useRef } from "react";
 import { FaPeopleGroup } from "react-icons/fa6";
-import { IoIosPricetags } from "react-icons/io";
-import { IoIosSearch } from "react-icons/io";
+import { IoIosPricetags, IoIosSearch } from "react-icons/io";
 import { toast } from "react-toastify";
-import BASE_URL from "../../utils/config";
 import { useNavigate } from "react-router-dom";
-import "./SeachhBar.css";
+import "./SearchhBar.css";
 
 const SearchBar = () => {
-  const minPriceRef = useRef(0);
-  const maxPriceRef = useRef(0);
-  const cityRef = useRef(0);
+  const minPriceRef = useRef();
+  const maxPriceRef = useRef();
+  const cityRef = useRef();
   const navigate = useNavigate();
 
-  const SubmitHandler = async () => {
-    const minPrice = minPriceRef.current.value;
-    const maxPrice = maxPriceRef.current.value;
-    const searchTerm = cityRef.current.value;
+  const SubmitHandler = () => {
+    const minPrice = minPriceRef.current.value.trim();
+    const maxPrice = maxPriceRef.current.value.trim();
+    const searchTerm = cityRef.current.value.trim();
 
-    if (minPrice === "" || maxPrice === "" || searchTerm === "") {
-      toast.error("Please fill all the fields");
-    } else {
-      const response = await fetch(
-        `${BASE_URL}/tour/search?search=${searchTerm}&minPrice=${minPrice}&maxPrice=${maxPrice}`
-      );
-      if (!response.ok) {
-        toast.error("No Record Found!");
-        navigate(
-          `/tours/search?search=${searchTerm}&minPrice=${minPrice}&maxPrice=${maxPrice}`,
-          { state: result.data }
-        );
-      }
-
-      const result = await response.json();
-
-      navigate(
-        `/tours/search?search=${searchTerm}&minPrice=${minPrice}&maxPrice=${maxPrice}`,
-        { state: result.data }
-      );
+    if (!searchTerm) {
+      toast.error("Please enter a destination!", {
+        toastId: "search-error",
+        style: {
+          background: "#8b0000",
+          color: "#f4fff4",
+          fontFamily: "'Outfit', sans-serif",
+          fontWeight: "600",
+          border: "1px solid #ff4444",
+          borderRadius: "12px",
+          boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
+        },
+      });
+      return;
     }
+
+    let query = `/tours/search?city=${encodeURIComponent(searchTerm)}`;
+    if (minPrice) query += `&minPrice=${minPrice}`;
+    if (maxPrice) query += `&maxPrice=${maxPrice}`;
+
+    navigate(query);
   };
 
   return (
-    <div>
-      <div className="search-bar">
-        <form className="form md:flex hidden items-center gap-4">
-          <div className="form-group flex gap-3 md:form-group-fast">
-            <span>
-              <i>
-                <FaPeopleGroup />
-              </i>
-            </span>
-            <div>
-              <h6>Location</h6>
-              <input
-                type="text"
-                placeholder="Where are you going?"
-                ref={cityRef}
-              />
-            </div>
+    <div className="search-bar-wrapper">
+      <form
+        className="search-form"
+        onSubmit={(e) => {
+          e.preventDefault();
+          SubmitHandler();
+        }}
+      >
+        <div className="form-group">
+          <span><FaPeopleGroup /></span>
+          <div>
+            <h6>Location</h6>
+            <input type="text" placeholder="Where are you going?" ref={cityRef} />
           </div>
-          <div className="form-group flex gap-3 md:form-group-fast">
-            <span>
-              <i>
-                <IoIosPricetags />
-              </i>
-            </span>
-            <div>
-              <h6>Min Price</h6>
-              <input type="number" placeholder="Mn. Price" ref={minPriceRef} />
-            </div>
+        </div>
+
+        <div className="form-group">
+          <span><IoIosPricetags /></span>
+          <div>
+            <h6>Min Price</h6>
+            <input type="number" placeholder="Min Price (optional)" ref={minPriceRef} />
           </div>
-          <div className="form-group flex gap-3 form-group-last">
-            <span>
-              <i>
-                <IoIosPricetags />
-              </i>
-            </span>
-            <div>
-              <h6>Max Price</h6>
-              <input type="number" placeholder="Max Price" ref={maxPriceRef} />
-            </div>
+        </div>
+
+        <div className="form-group">
+          <span><IoIosPricetags /></span>
+          <div>
+            <h6>Max Price</h6>
+            <input type="number" placeholder="Max Price (optional)" ref={maxPriceRef} />
           </div>
-          <span
-            className="search-icon bg-BaseColor rounded-lg cursor-pointer py-2 px-2"
-            type="submit"
-            onClick={SubmitHandler}
-          >
-            <i>
-              <IoIosSearch size={30} className="text-white" />
-            </i>
-          </span>
-        </form>
-      </div>
+        </div>
+
+        <button type="submit" className="search-btn">
+          <IoIosSearch size={24} />
+        </button>
+      </form>
     </div>
   );
 };

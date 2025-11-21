@@ -1,55 +1,80 @@
+// index.js
+// Main entry point for the backend server (Local Development Setup)
+
 import express from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import cors from "cors";
+import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// Import all route modules
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import tourRoutes from "./routes/tourRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
-import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
 
 dotenv.config();
-const app = express();
-const PORT = process.env.PORT || 3050;
 
+const app = express();
+const PORT = process.env.PORT || 4000;
+
+// Resolve __dirname in ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URL)
-  .then(() => console.log("DB connected"))
-  .catch((err) => console.log(err));
+  .then(() => console.log("✅ MongoDB connected successfully"))
+  .catch((err) => console.error("❌ MongoDB connection failed:", err));
 
-// Middleware for CORS and JSON parsing
+// Middleware Configuration
+// Allow CORS from both localhost and local network IP for mobile access
 const allowedOrigins = [
-  "https://trips-travel.vercel.app",
   "http://localhost:5173",
+  "http://192.168.43.113:5173",
 ];
+
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: allowedOrigins,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], // PATCH added
+    credentials: true,
   })
 );
+
+// Handle preflight requests
+app.options("*", cors({
+  origin: allowedOrigins,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+  credentials: true,
+}));
+
+// Parse incoming requests
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.json());
 
-// Routes
+// Serve uploaded images statically
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/tour", tourRoutes);
 app.use("/api/review", reviewRoutes);
 app.use("/api/booking", bookingRoutes);
 
+// Default Route
 app.get("/", (req, res) => {
-  res.send("Welcome to the Trips & Travels API!");
+  res.send("Welcome to the Trips & Travels API (Local Version)!");
 });
 
+// Start the Server
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`🚀 Server is running locally on port ${PORT} Travely`);
 });

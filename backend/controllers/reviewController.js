@@ -1,60 +1,70 @@
-import Review from '../models/Review.js';
-import Tour from '../models/Tour.js'
+import Review from "../models/Review.js";
+import Tour from "../models/Tour.js";
 
-const createReview = async (req, res) => {
+// create review
+export const createReview = async (req, res) => {
+  const tourId = req.params.tourId;
+  const newReview = new Review({ ...req.body });
+
   try {
-    const { username, rating, reviewText } = req.body;
-    const tourId = req.params.tourId;
+    const savedReview = await newReview.save();
 
-    // Validate required fields
-    if (!tourId || !rating) {
-      return res.status(400).json({ message: 'Tour ID and rating are required' });
-    }
+    await Tour.findByIdAndUpdate(tourId, {
+      $push: { reviews: savedReview._id },
+    });
 
-    // Find the corresponding tour
-    const tour = await Tour.findById(tourId);
-
-    if (!tour) {
-      return res.status(404).json({ message: 'Tour not found' });
-    }
-
-    // Create a new review
-    const newReview = new Review({ tourId, reviewText, rating, username });
-    await newReview.save();
-
-    // Update the tour with the new review
-    tour.reviews.push(newReview._id);
-    await tour.save();
-
-    res.status(201).json({ success: true, message: 'Review created successfully', newReview });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(200).json({
+      success: true,
+      message: "review added",
+      data: savedReview,
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
-// Delete a review by ID
-const deleteReview = async (req, res) => {
+// get all reviews
+export const getReviews = async (req, res) => {
   try {
-    const reviewId = req.params.id;
-
-    // Validate review ID
-    if (!reviewId) {
-      return res.status(400).json({ message: 'Review ID is required' });
-    }
-
-    // Find and delete the review
-    const deletedReview = await Review.findByIdAndDelete(reviewId);
-
-    if (!deletedReview) {
-      return res.status(404).json({ message: 'Review not found' });
-    }
-
-    res.status(200).json({ success: true, message: 'Review deleted successfully' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    const reviews = await Review.find({});
+    res.status(200).json({ success: true, data: reviews });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
-export { createReview, deleteReview };
+// get single review
+export const getSingleReview = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const review = await Review.findById(id);
+
+    if (!review) {
+      return res.status(404).json({
+        success: false,
+        message: "review not found",
+      });
+    }
+
+    res.status(200).json({ success: true, data: review });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// delete review
+export const deleteReview = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    await Review.findByIdAndDelete(id);
+
+    res.status(200).json({
+      success: true,
+      message: "review deleted",
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};

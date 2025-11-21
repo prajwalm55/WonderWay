@@ -1,8 +1,10 @@
-import React from "react";
-import BASE_URL from "../utils/config";
+import React, { useContext } from "react";
 import { toast } from "react-toastify";
+import BASE_URL from "../utils/config";
+import { AuthContext } from "../context/AuthContext";
 
-const BookingCard = ({ booking }) => {
+const AdminBookings = ({ booking, refreshBookings }) => {
+  const { token } = useContext(AuthContext);
   const {
     tourName,
     fullName,
@@ -12,61 +14,103 @@ const BookingCard = ({ booking }) => {
     maxGroupSize,
     date,
     createdAt,
+    status,
     _id,
   } = booking;
 
-  const setCreatedAt = new Date(createdAt);
-  const newCreatedAt = setCreatedAt.toDateString(); // Get a string representing the date portion
+  const bookedDate = new Date(date).toDateString();
+  const createdDate = new Date(createdAt).toDateString();
 
-  const booked = new Date(date);
-  const bookedFor = booked.toDateString(); // Get a string representing the date portion
+  const showSuccess = (msg) => toast.success(msg);
+  const showError = (msg) => toast.error(msg);
 
-  const confirmDelete = async () => {
-    const result = window.confirm("Is this booking completed?");
-    if (result) {
-      deleteBooking();
+  // ✅ Soft Complete (PATCH) for Active bookings
+  const handleComplete = async () => {
+    if (!token) return showError("Unauthorized!");
+    if (!window.confirm("Mark this booking as completed?")) return;
+
+    try {
+      const res = await fetch(`${BASE_URL}/booking/${_id}/complete`, {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "completed" }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showSuccess(data.message || "Booking marked completed");
+        refreshBookings(); // refresh bookings after update
+      } else {
+        showError(data.message || "Failed to update booking");
+      }
+    } catch (err) {
+      console.error(err);
+      showError("Server error");
     }
   };
 
-  const deleteBooking = async () => {
-    try {
-      const response = await fetch(`${BASE_URL}/booking/${_id}`, {
-        method: "DELETE",
-      });
-      const { message } = await response.json();
+  // ✅ Hard delete for cancelled bookings
+  const handleDelete = async () => {
+    if (!token) return showError("Unauthorized!");
+    if (!window.confirm("Delete this booking permanently?")) return;
 
-      if (response.ok) {
-        // toast.success(message)
-        location.reload();
+    try {
+      const res = await fetch(`${BASE_URL}/booking/${_id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showSuccess(data.message || "Booking deleted successfully");
+        refreshBookings(); // refresh bookings after delete
       } else {
-        toast.error(message);
+        showError(data.message || "Failed to delete booking");
       }
     } catch (err) {
-      toast.error("Server not responding");
+      console.error(err);
+      showError("Server error");
     }
   };
 
   return (
-    <>
-      <tbody className="rounded overflow-hidden py-8 px-3 border-b-gray-500 border-b-[1px]   ">
-        <tr className="w-full text-center overflow-hidden">
-          <td className="">{tourName}</td>
-          <td className="">{fullName}</td>
-          <td className="">{userId}</td>
-          <td className="">{maxGroupSize}</td>
-          <td className="">{phone}</td>
-          <td className="">{bookedFor}</td>
-          <td className="">{newCreatedAt}</td>
-          <td className="">{totalPrice}</td>
-          <td>
-            <button onClick={confirmDelete} className="Redbtn my-2 mx-2 ">
-              Completed
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </>
+    <tr className="text-center text-white font-[Cormorant_Garamond] text-xs md:text-sm hover:bg-[#004d33]/70 transition-all duration-200">
+      <td className="py-3 px-2">{tourName}</td>
+      <td className="py-3 px-2">{fullName}</td>
+      <td className="py-3 px-2">{userId}</td>
+      <td className="py-3 px-2">{maxGroupSize}</td>
+      <td className="py-3 px-2">{phone}</td>
+      <td className="py-3 px-2">{bookedDate}</td>
+      <td className="py-3 px-2">{createdDate}</td>
+      <td className="py-3 px-2">₹{totalPrice}</td>
+      <td className="py-3 px-2">
+        {status === "cancelled" ? (
+          <span className="text-red-500 font-semibold">Cancelled</span>
+        ) : status === "completed" ? (
+          <span className="text-yellow-400 font-semibold">Completed</span>
+        ) : (
+          <span className="text-green-400 font-semibold">Active</span>
+        )}
+      </td>
+      <td className="py-3 px-2">
+        {status === "cancelled" ? (
+          <button
+            onClick={handleDelete}
+            className="bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded-xl transition-all duration-200 font-[Cinzel]"
+          >
+            Delete
+          </button>
+        ) : status === "active" ? (
+          <button
+            onClick={handleComplete}
+            className="bg-green-500 hover:bg-green-700 text-white px-3 py-1 rounded-xl transition-all duration-200 font-[Cinzel]"
+          >
+            Complete
+          </button>
+        ) : (
+          <span>—</span>
+        )}
+      </td>
+    </tr>
   );
 };
 
-export default BookingCard;
+export default AdminBookings;

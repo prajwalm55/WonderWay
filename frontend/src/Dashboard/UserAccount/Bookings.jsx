@@ -1,32 +1,85 @@
-import React, { useContext } from "react";
-import useFetch from "../../hooks/useFetch";
+import React, { useContext, useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import BASE_URL from "../../utils/config";
 import { AuthContext } from "../../context/AuthContext";
 import BookingCard from "../../shared/BookingCard";
 
 const Bookings = () => {
-  const { user } = useContext(AuthContext);
-  const { apiData: bookings } = useFetch(`${BASE_URL}/booking/${user._id}`);
+  const { user, token, dispatch } = useContext(AuthContext);
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const fetchBookings = async () => {
+      if (!user || !token) {
+        console.log("User or Token not found");
+        setError(true);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const res = await fetch(`${BASE_URL}/booking`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (res.status === 401) {
+          console.log("Unauthorized Access - Logging out");
+          dispatch({ type: "LOGOUT" });
+          setError(true);
+          setLoading(false);
+          return;
+        }
+
+        if (!res.ok) throw new Error(`Fetch failed with status: ${res.status}`);
+
+        const data = await res.json();
+        console.log("Fetched Bookings Data:", data);
+        setBookings(data.success && data.data ? data.data : []);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching bookings:", error);
+        setError(true);
+        setLoading(false);
+      }
+    };
+
+    fetchBookings();
+  }, [user, token, dispatch]);
+
+  if (loading)
+    return (
+      <p className="text-green-200 text-center py-6 animate-pulse">
+        Loading your bookings...
+      </p>
+    );
+
+  if (error)
+    return (
+      <p className="text-red-400 text-center py-6">
+        Failed to load bookings. Please login again if the problem persists.
+      </p>
+    );
 
   return (
-    <div className="py-8">
-      <div className="flex flex-col gap-5">
-        <table className="w-full table-auto text-xs md:text-sm gap-4 border-collapse border">
-          <thead className="w-full py-2">
-            <tr>
-              <th className="tableData">Tour</th>
-              <th className="hidden md:block tableData">Persons</th>
-              <th className="tableData">Booked for</th>
-              <th className="tableData">Price</th>
-              <th></th>
-            </tr>
-          </thead>
-          {bookings?.map((booking) => (
-            <BookingCard booking={booking} key={booking._id} />
+    <motion.div className="rounded-3xl border border-green-700/30 shadow-xl p-4 sm:p-6 md:p-6 text-green-100 backdrop-blur-md bg-black/50 overflow-x-hidden">
+      {bookings.length > 0 ? (
+        <div className="flex flex-col gap-4">
+          {bookings.map((booking) => (
+            <BookingCard
+              key={booking._id}
+              booking={booking}
+              setBookings={setBookings}
+            />
           ))}
-        </table>
-      </div>
-    </div>
+        </div>
+      ) : (
+        <p className="text-green-300 text-center py-6 text-base">
+          You haven’t booked any tours yet.
+        </p>
+      )}
+    </motion.div>
   );
 };
 

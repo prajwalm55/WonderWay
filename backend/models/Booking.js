@@ -1,5 +1,3 @@
-// bookingModel.js
-
 import mongoose from "mongoose";
 
 const bookingSchema = new mongoose.Schema(
@@ -32,6 +30,23 @@ const bookingSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    bookingCode: {
+      type: String,
+      unique: true,
+    },
+    status: {
+      type: String,
+      enum: ["active", "cancelled", "completed"],
+      default: "active",
+    },
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "paid"],
+      default: "pending",
+    },
+    paymentId: {
+      type: String,
+    },
     updatedAt: {
       type: Date,
       default: Date.now,
@@ -39,5 +54,14 @@ const bookingSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// Pre-save hook to generate human-readable bookingCode
+bookingSchema.pre("save", function (next) {
+  if (!this.bookingCode) {
+    const random = Math.floor(10000 + Math.random() * 90000);
+    this.bookingCode = `TRVL-${random}`;
+  }
+  next();
+});
 
 export default mongoose.model("Booking", bookingSchema);

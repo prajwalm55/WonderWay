@@ -1,13 +1,25 @@
-import express from 'express';
-import { createReview, deleteReview } from '../controllers/reviewController.js';
-import { verifyUser } from '../middleware/authMiddleware.js';
+import express from "express";
+import {
+  createReview,
+  deleteReview,
+  getReviews,
+  getSingleReview,
+} from "../controllers/reviewController.js";
+
 const router = express.Router();
 
+// Review Routes
 
-// Create a new review
-router.post('/:tourId', verifyUser, createReview);
+// Add a new review for a specific tour (tourId is passed in the URL)
+router.post("/:tourId", createReview);
 
-// Delete a review by ID
-router.delete('/:id', verifyUser, deleteReview);
+// Get all reviews
+router.get("/", getReviews);
+
+// Get a single review by its ID
+router.get("/:id", getSingleReview);
+
+// Delete a review by its ID
+router.delete("/:id", deleteReview);
 
 export default router;

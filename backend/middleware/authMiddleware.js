@@ -1,46 +1,51 @@
 import jwt from 'jsonwebtoken';
-import User from '../models/User.js'
 
-const verifyToken =  (req, res, next) => {
-  const token = req.cookies.accessToken || req.headers.authorization?.split(' ')[1];
+// Middleware to verify JWT token
+const verifyToken = (req, res, next) => {
+  const token = req.cookies?.accessToken || req.headers.authorization?.split(' ')[1];
 
   if (!token) {
-    return res.status(401).json({ message: 'Unauthorized - No token provided' });
+    return res.status(401).json({ success: false, message: 'Unauthorized - No token provided' });
   }
 
   try {
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    req.id = decoded.id;
-    req.role = decoded.role;
+    req.user = {
+      id: decoded.id.toString(),
+      role: decoded.role
+    };
 
-    
-    // Continue to the next middleware or route handler
+    console.log('Decoded Token:', decoded); 
     next();
-  } catch (error) {
-    console.error({message: "JWT error occured"});
-    return res.status(401).json({ message: 'Unauthorized - Invalid token' });
+  } catch (err) {
+    console.error('JWT Error:', err.message);
+    return res.status(401).json({ success: false, message: 'Unauthorized - Invalid token' });
   }
 };
 
+// Middleware to allow only the user themselves or admin
 const verifyUser = (req, res, next) => {
-    const userId = req.id;
-    const paramsId = req.params.id
-    const role = req.role;
-              
-        if(paramsId === userId || role === 'admin'){
-          next()
-        }else{
-          res.status(401).json({success: false, message: "You're not Authorized"})
-        }    
-}
+  const userId = req.user?.id;
+  const paramsId = req.params.id.toString();
+  const role = req.user?.role;
 
+  console.log({ paramsId, userId, role });
+
+  if (paramsId === userId || role === 'admin') {
+    next();
+  } else {
+    return res.status(401).json({ success: false, message: "You're not authorized" });
+  }
+};
+
+// Middleware to allow only admin
 const verifyAdmin = (req, res, next) => {
-  const role = req.role;
-      if(role === 'admin'){
-        next()
-      }else{
-        res.status(401).json({success: false, message: "You're not Authorized"})
-      }
-}
+  const role = req.user?.role;
+  if (role === 'admin') {
+    next();
+  } else {
+    return res.status(401).json({ success: false, message: "You're not authorized" });
+  }
+};
 
-export  {verifyToken, verifyAdmin, verifyUser};
+export { verifyToken, verifyUser, verifyAdmin };

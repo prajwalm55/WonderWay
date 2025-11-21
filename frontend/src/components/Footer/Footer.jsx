@@ -1,5 +1,6 @@
-import Logo from "./../../assets/images/logo3.png";
-import React, { useContext, useState } from "react";
+// --- src/components/Footer.jsx ---
+import Logo from "./../../assets/images/logonavm-clear.png";
+import React, { useState } from "react";
 import {
   FaFacebookF,
   FaTwitter,
@@ -7,55 +8,142 @@ import {
   FaYoutube,
   FaGithub,
 } from "react-icons/fa";
-import Newsletter from "../../shared/Newsletter";
-import { AuthContext } from "../../context/AuthContext";
 
-const Footer = () => {
-  const { role } = useContext(AuthContext);
+// --- Newsletter Component ---
+// Handles email subscription input and submission
+const Newsletter = () => {
+  const [email, setEmail] = useState("");
+
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    if (!email) return alert("Please enter your email!");
+    alert(`Subscribed with: ${email}`);
+    setEmail("");
+  };
 
   return (
-    <>
-      {role === "admin" ? null : (
-        <footer className="bg-gray-800 text-white px-5 py-8">
-          <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
-            <div className="flex flex-col items-center mb-4 md:mb-0">
-              <img
-                src={Logo}
-                alt="Trips Travels Logo"
-                className="h-20 md:mr-12 "
-              />
-              <div className="flex flex-col mt-8 text-center md:text-left">
-                <p className="mb-2">Address: 123 Travel St, City, Country</p>
-                <p className="mb-2">Phone: +1 234 567 890</p>
-                <p className="mb-2">Email: info@tripstravels.com</p>
-                <p>&copy; 2024 Trips Travels. All rights reserved.</p>
-              </div>
-            </div>
+    <div className="w-full max-w-md text-center flex flex-col gap-2">
+      {/* Newsletter heading */}
+      <h3
+        className="text-white text-base sm:text-lg font-semibold"
+        style={{ fontFamily: "'Cinzel', serif" }}
+      >
+        Subscribe To Travely
+      </h3>
 
-            <Newsletter />
+      {/* Email input and subscribe button */}
+      <form
+        onSubmit={handleSubscribe}
+        className="flex flex-col sm:flex-row justify-center items-center gap-2 w-full"
+      >
+        <input
+          type="email"
+          placeholder="Enter your email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="flex-1 px-3 py-2 rounded-md border border-gray-400 bg-[#00291f] 
+                     text-white placeholder-gray-400 focus:outline-none focus:ring-2 
+                     focus:ring-green-700 text-sm text-center sm:text-left"
+          style={{ fontFamily: "'Cormorant Garamond', serif" }}
+        />
+        <button
+          type="submit"
+          className="px-4 py-2 bg-green-500 hover:bg-green-400 text-white font-semibold 
+                     rounded-md shadow-md text-sm w-full sm:w-auto"
+          style={{ fontFamily: "'Cinzel', serif" }}
+        >
+          Subscribe
+        </button>
+      </form>
+    </div>
+  );
+};
 
-            {/* Social Media Links */}
-            <div className="flex md:flex-col gap-4 mt-4 md:mt-0">
-              <a href="#" className="text-white hover:text-gray-300">
-                <FaFacebookF />
-              </a>
-              <a href="#" className="text-white hover:text-gray-300">
-                <FaTwitter />
-              </a>
-              <a href="#" className="text-white hover:text-gray-300">
-                <FaInstagram />
-              </a>
-              <a href="#" className="text-white hover:text-gray-300">
-                <FaYoutube />
-              </a>
-              <a href="#" className="text-white hover:text-gray-300">
-                <FaGithub />
-              </a>
-            </div>
+// --- Footer Component ---
+// Main footer with logo, newsletter, social links, and contact info
+const Footer = () => {
+  return (
+    <footer
+      className="w-full relative overflow-hidden py-4 sm:py-6 lg:py-8 px-4 sm:px-10 z-20"
+      style={{ backgroundColor: "#013629ff", fontFamily: "'Outfit', sans-serif" }}
+    >
+      {/* Top section: Logo, Newsletter, Social links */}
+      <div className="w-full flex flex-col lg:flex-row justify-between items-center lg:items-start gap-8 sm:gap-10">
+        
+        {/* Logo Section */}
+        <div className="hidden sm:flex items-center gap-3 flex-1 justify-center lg:justify-start">
+          <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-full overflow-hidden">
+            <img
+              src={Logo}
+              alt="Travely Logo"
+              className="h-full w-full object-contain"
+              style={{ filter: "brightness(0) invert(1)" }}
+            />
           </div>
-        </footer>
-      )}
-    </>
+          <h2
+            className="text-white text-2xl sm:text-3xl font-bold tracking-wide"
+            style={{ fontFamily: "'Cinzel', serif" }}
+          >
+            Travely
+          </h2>
+        </div>
+
+        {/* Newsletter Component */}
+        <div className="flex justify-center flex-1 w-full sm:mt-0">
+          <Newsletter />
+        </div>
+
+        {/* Social Media Links */}
+        <div className="flex flex-col items-center lg:items-end gap-3 flex-1">
+          <h3
+            className="text-white text-base sm:text-lg font-semibold"
+            style={{ fontFamily: "'Cinzel', serif" }}
+          >
+            Follow Us
+          </h3>
+          <div className="flex gap-3 text-lg">
+            {[FaFacebookF, FaTwitter, FaInstagram, FaYoutube, FaGithub].map((Icon, i) => (
+              <a
+                key={i}
+                href="#"
+                className="text-white p-2 rounded-full transition-all 
+                 hover:scale-125 hover:text-green-300 hover:shadow-[0_0_15px_#6ee7b7] hover:-translate-y-1"
+              >
+                <Icon />
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom section: Contact info & copyright */}
+      <div className="text-center text-gray-300 border-t border-[#0b1120] mt-5 pt-3">
+        <p
+          className="text-sm lg:text-base font-medium"
+          style={{ fontFamily: "'Cormorant Garamond', serif" }}
+        >
+          Travely Booking Service, Amalner, India
+        </p>
+        <p
+          className="text-sm lg:text-base font-medium"
+          style={{ fontFamily: "'Cormorant Garamond', serif" }}
+        >
+          📞 +91 93224 14106
+        </p>
+        <p
+          className="text-sm lg:text-base font-medium"
+          style={{ fontFamily: "'Cormorant Garamond', serif" }}
+        >
+          📧 info@Travely.com
+        </p>
+        <p
+          className="pt-2 text-xs lg:text-sm text-gray-400 font-medium"
+          style={{ fontFamily: "'Cormorant Garamond', serif" }}
+        >
+          © 2025 Travely. All rights reserved.
+        </p>
+      </div>
+    </footer>
   );
 };
 

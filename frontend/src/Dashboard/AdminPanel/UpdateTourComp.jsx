@@ -1,11 +1,25 @@
 import React, { useState, useContext, useEffect } from "react";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import BASE_URL from "../../utils/config";
 import { AuthContext } from "../../context/AuthContext";
+import BASE_URL from "../../utils/config";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
-const UpdateTours = ({ tour, id }) => {
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (delay = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, delay, ease: "easeOut" },
+  }),
+};
+
+const PREMIUM_ACCENT_GREEN = "#6ee7b7";
+const CARD_BG = "rgba(0,57,31,0.8)";
+
+const UpdateToursComp = ({ tour, id }) => {
   const { token } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -22,20 +36,8 @@ const UpdateTours = ({ tour, id }) => {
 
   useEffect(() => {
     if (tour) {
-      const {
-        title,
-        city,
-        desc,
-        address,
-        price,
-        maxGroupSize,
-        photo,
-        distance,
-        featured,
-      } = tour || {};
-
-      setFormData((prevData) => ({
-        ...prevData,
+      const { title, city, desc, address, price, maxGroupSize, photo, distance, featured } = tour;
+      setFormData({
         title: title || "",
         city: city || "",
         desc: desc || "",
@@ -45,16 +47,19 @@ const UpdateTours = ({ tour, id }) => {
         photo: photo || "",
         distance: distance || 0,
         featured: featured || false,
-      }));
+      });
     }
   }, [tour]);
 
   const handleInput = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    let value = e.target.value;
+    if (e.target.name === "featured") value = value === "true";
+    setFormData({ ...formData, [e.target.name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
       const response = await fetch(`${BASE_URL}/tour/${id}`, {
@@ -65,209 +70,175 @@ const UpdateTours = ({ tour, id }) => {
         },
         body: JSON.stringify(formData),
       });
+
       const { message } = await response.json();
 
       if (response.ok) {
-        toast.success(message);
+        toast.success(message, {
+          position: "top-right",
+          autoClose: 2500,
+          style: {
+            background: "#004d33",
+            color: "#f4fff4",
+            fontWeight: "600",
+            borderRadius: "12px",
+          },
+        });
+
+        setTimeout(() => navigate("/all-tours"), 2500);
       } else {
-        toast.error(message);
+        toast.error(message, {
+          position: "top-right",
+          autoClose: 2500,
+          style: {
+            background: "#8b0000",
+            color: "#f4fff4",
+            fontWeight: "600",
+            borderRadius: "12px",
+          },
+        });
       }
-    } catch (err) {
-      toast.error("Server not responding");
+    } catch {
+      toast.error("Server not responding", {
+        position: "top-right",
+        autoClose: 2500,
+        style: {
+          background: "#8b0000",
+          color: "#f4fff4",
+          fontWeight: "600",
+          borderRadius: "12px",
+        },
+      });
     }
+
+    setIsLoading(false);
   };
 
   return (
-    <div className="min-h-screen md:min-h-[400px] flex items-center justify-center bg-gray-100">
-      <div className="bg-white mx-6 p-6 md:p-8 rounded-lg text-center shadow-md w-full max-w-2xl m-8 md:max-w-[90%] ">
-        <div className="flex flex-col justify-center">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
-              Update Tour
-            </h2>
-            <p className="text-sm md:text-base text-GrayColor">
-              Create a new tour by filling the all fields.
-            </p>
-          </div>
+    <motion.div
+      className="p-8 md:p-12 rounded-2xl shadow-2xl w-full max-w-3xl mb-10 mx-auto"
+      style={{
+        background: CARD_BG,
+        backdropFilter: "blur(8px)",
+        minHeight: "70%",
+        border: `1px solid ${PREMIUM_ACCENT_GREEN}40`,
+      }}
+      initial="hidden"
+      animate="visible"
+      variants={fadeUp}
+    >
+      {/* Header */}
+      <motion.h2
+        className="text-4xl md:text-5xl font-bold text-white mb-4 text-center drop-shadow-lg"
+        style={{ fontFamily: "'Cinzel', serif" }}
+        variants={fadeUp}
+        custom={0.1}
+      >
+        Update <span style={{ color: PREMIUM_ACCENT_GREEN }}>Tour</span>
+      </motion.h2>
+      <motion.p
+        className="text-green-200 text-center mb-8 text-lg md:text-xl"
+        style={{ fontFamily: "'Cormorant Garamond', serif" }}
+        variants={fadeUp}
+        custom={0.2}
+      >
+        Update tour details by filling all fields.
+      </motion.p>
 
-          <form onSubmit={handleSubmit} className="space-y-2 md:space-y-3">
-            <div className="md:grid grid-cols-2 gap-8">
-              <div>
-                <label
-                  htmlFor=""
-                  className="block  text-md md:text-lg font-medium text-GrayColor"
-                >
-                  Title
-                </label>
-                <input
-                  type="text"
-                  name="title"
-                  placeholder="Enter Tour Name"
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-GreenColor"
-                  value={formData.title}
-                  onChange={handleInput}
-                  required
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor=""
-                  className="block text-md md:text-lg font-medium text-GrayColor"
-                >
-                  City
-                </label>
-                <input
-                  type="text"
-                  name="city"
-                  placeholder="Enter City Name"
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-GreenColor"
-                  value={formData.city}
-                  onChange={handleInput}
-                  required
-                />
-              </div>
-            </div>
-            <div className="md:grid grid-cols-3 gap-8">
-              <div>
-                <label
-                  htmlFor=""
-                  className="block text-md md:text-lg font-medium text-GrayColor"
-                >
-                  Price
-                </label>
-                <input
-                  type="number"
-                  name="price"
-                  placeholder="Enter Price"
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-GreenColor"
-                  value={formData.price}
-                  onChange={handleInput}
-                  required
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor=""
-                  className="block text-md md:text-lg font-medium text-GrayColor"
-                >
-                  Max Peoples
-                </label>
-                <input
-                  type="number"
-                  name="maxGroupSize"
-                  placeholder="Enter Max Peoples per Trip Tour"
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-GreenColor"
-                  value={formData.maxGroupSize}
-                  onChange={handleInput}
-                  required
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor=""
-                  className="block text-md md:text-lg font-medium text-GrayColor"
-                >
-                  Distance
-                </label>
-                <input
-                  type="number"
-                  name="distance"
-                  placeholder="Enter Total Distance"
-                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-GreenColor"
-                  value={formData.distance}
-                  onChange={handleInput}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label
-                htmlFor=""
-                className="block text-md md:text-lg font-medium text-GrayColor"
-              >
-                Address
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-3">
+        {/* Title & City */}
+        <div className="md:grid grid-cols-2 gap-3">
+          {["title", "city"].map((field, idx) => (
+            <motion.div key={field} variants={fadeUp} custom={0.3 + idx * 0.1}>
+              <label className="block text-green-200 font-medium mb-1 capitalize">
+                {field === "title" ? "Title" : "City"}
               </label>
               <input
                 type="text"
-                name="address"
-                placeholder="Enter Destination Address"
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-GreenColor"
-                value={formData.address}
+                name={field}
+                value={formData[field]}
                 onChange={handleInput}
+                placeholder={field === "title" ? "Tour Name" : "City Name"}
+                className="w-full px-4 py-3 rounded-xl border border-green-700 bg-black/30 text-white focus:outline-none focus:ring-2 focus:ring-green-400 transition-all duration-300 hover:scale-[1.01]"
+                style={{ fontFamily: "'Cormorant Garamond', serif" }}
                 required
               />
-            </div>
-
-            <div>
-              <label
-                htmlFor=""
-                className="block text-md md:text-lg font-medium text-GrayColor"
-              >
-                Description
-              </label>
-              <input
-                type="text"
-                name="desc"
-                placeholder="Enter Description"
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-GreenColor"
-                value={formData.desc}
-                onChange={handleInput}
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor=""
-                className="block text-md md:text-lg font-medium text-GrayColor"
-              >
-                Photo URL
-              </label>
-              <input
-                type="text"
-                name="photo"
-                placeholder="Enter Picture URL"
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-GreenColor"
-                value={formData.photo}
-                onChange={handleInput}
-                required
-              />
-            </div>
-
-            <div className="flex items-center justify-between mb-3">
-              <label
-                htmlFor=""
-                className="text-TextColor text-[15px] font-semibold leading-7 px-4"
-              >
-                Featured
-                <select
-                  name="featured"
-                  value={formData.featured}
-                  onChange={handleInput}
-                  className="text-TextColor text-[15px] leading-7 px-4 py-3 focus:outline-none"
-                >
-                  <option value="false">No</option>
-                  <option value="true">Yes</option>
-                </select>
-              </label>
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                className="w-full Bluebtn my-3"
-                disabled={isLoading}
-              >
-                {isLoading ? "Updating..." : "Update"}
-              </button>
-            </div>
-          </form>
+            </motion.div>
+          ))}
         </div>
-      </div>
-    </div>
+
+        {/* Price, Max Group, Distance */}
+        <div className="md:grid grid-cols-3 gap-3">
+          {["price", "maxGroupSize", "distance"].map((field, idx) => (
+            <motion.div key={field} variants={fadeUp} custom={0.5 + idx * 0.1}>
+              <label className="block text-green-200 font-medium mb-1 capitalize">
+                {field === "maxGroupSize" ? "Max People" : field.charAt(0).toUpperCase() + field.slice(1)}
+              </label>
+              <input
+                type="number"
+                name={field}
+                value={formData[field]}
+                onChange={handleInput}
+                placeholder={field === "price" ? "Price" : field === "maxGroupSize" ? "Max People" : "Distance"}
+                className="w-full px-4 py-3 rounded-xl border border-green-700 bg-black/30 text-white focus:outline-none focus:ring-2 focus:ring-green-400 transition-all duration-300 hover:scale-[1.01]"
+                style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                required={field !== "distance"}
+              />
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Address, Description, Photo */}
+        {["address", "desc", "photo"].map((field, idx) => (
+          <motion.div key={field} variants={fadeUp} custom={0.8 + idx * 0.1}>
+            <label className="block text-green-200 font-medium mb-1 capitalize">
+              {field === "desc" ? "Description" : field.charAt(0).toUpperCase() + field.slice(1)}
+            </label>
+            <input
+              type="text"
+              name={field}
+              value={formData[field]}
+              onChange={handleInput}
+              placeholder={field === "desc" ? "Description" : field === "photo" ? "Photo URL" : "Destination Address"}
+              className="w-full px-4 py-3 rounded-xl border border-green-700 bg-black/30 text-white focus:outline-none focus:ring-2 focus:ring-green-400 transition-all duration-300 hover:scale-[1.01]"
+              style={{ fontFamily: "'Cormorant Garamond', serif" }}
+              required={field !== "desc"}
+            />
+          </motion.div>
+        ))}
+
+        {/* Featured */}
+        <motion.div variants={fadeUp} custom={1.2}>
+          <label className="block text-green-200 font-medium mb-1">
+            Featured
+            <select
+              name="featured"
+              value={formData.featured}
+              onChange={handleInput}
+              className="w-full mt-1 px-4 py-3 rounded-xl border border-green-700 bg-black/30 text-white focus:outline-none focus:ring-2 focus:ring-green-400 transition-all duration-300 hover:scale-[1.01]"
+              style={{ fontFamily: "'Cormorant Garamond', serif" }}
+            >
+              <option value={false}>No</option>
+              <option value={true}>Yes</option>
+            </select>
+          </label>
+        </motion.div>
+
+        {/* Submit */}
+        <motion.div variants={fadeUp} custom={1.4}>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full bg-[#6ee7b7] hover:bg-green-500 text-white font-semibold py-3 rounded-2xl transition-all shadow-lg text-lg hover:scale-[1.02]"
+            style={{ fontFamily: "'Cinzel', serif" }}
+          >
+            {isLoading ? "Updating..." : "Update Tour"}
+          </button>
+        </motion.div>
+      </form>
+    </motion.div>
   );
 };
 
-export default UpdateTours;
+export default UpdateToursComp;

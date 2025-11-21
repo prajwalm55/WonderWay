@@ -1,106 +1,93 @@
-import React, { useContext, useState } from "react";
-import BASE_URL from "../utils/config";
-import useFetch from "../hooks/useFetch";
-import { toast } from "react-toastify";
-import UpdateTours from "../Dashboard/AdminPanel/UpdateTour";
+import React, { useContext } from "react";
+import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import { FaEdit, FaRegEdit } from "react-icons/fa";
-import { AiOutlineDelete } from "react-icons/ai";
-import { MdDelete } from "react-icons/md";
+import BASE_URL from "../utils/config";
+import { toast } from "react-toastify";
 
-const AdminToursCards = ({ tour }) => {
+const AdminToursCards = ({ tour, index, removeTourFromUI }) => {
   const { token } = useContext(AuthContext);
+  const { title, city, photo, maxGroupSize, featured, reviews, _id } = tour;
 
-  const {
-    title,
-    city,
-    address,
-    price,
-    maxGroupSize,
-    desc,
-    featured,
-    reviews,
-    updatedAt,
-    photo,
-    _id,
-  } = tour;
+  const handleDelete = async () => {
+    if (!window.confirm("Are you sure you want to delete this tour?")) return;
 
-  const handleDelete = () => {
-    // Display a confirmation dialog
-    const isConfirmed = window.confirm(
-      "Are you sure you want to delete this Tour Permanently?"
-    );
-
-    // Check if the user confirmed the action
-    if (isConfirmed) {
-      // Code to delete the item
-      deleteTour();
-    }
-  };
-
-  const deleteTour = async () => {
     try {
-      const response = await fetch(`${BASE_URL}/tour/${_id}`, {
+      const res = await fetch(`${BASE_URL}/tour/${_id}`, {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
-      const { message } = await response.json();
+      const { message } = await res.json();
 
-      if (!response.ok) {
-        toast.error(message);
+      if (res.ok) {
+        removeTourFromUI(_id); // remove from UI immediately
+        toast.success(message, {
+          position: "top-right",
+          autoClose: 2500,
+          style: {
+            background: "#004d33", // same dark green premium
+            color: "#f4fff4",
+            fontWeight: "600",
+            borderRadius: "12px",
+          },
+        });
       } else {
-        alert(message);
-        window.location.reload();
+        toast.error(message, {
+          position: "top-right",
+          autoClose: 2500,
+          style: {
+            background: "#8b0000",
+            color: "#f4fff4",
+            fontWeight: "600",
+            borderRadius: "12px",
+          },
+        });
       }
     } catch (err) {
-      toast.error("Server not responding");
+      toast.error("Server not responding", {
+        position: "top-right",
+        autoClose: 2500,
+        style: {
+          background: "#8b0000",
+          color: "#f4fff4",
+          fontWeight: "600",
+          borderRadius: "12px",
+        },
+      });
     }
   };
 
   return (
-    <>
-      <tbody className="rounded overflow-hidden py-8 px-3 bg-gray-100 shadow-lg ">
-        <tr className="w-full text-center overflow-hidden px-4">
-          <td className="py-2 object-cover overflow-hidden px-2">
-            <img
-              src={photo}
-              alt=""
-              className="object-cover h-[65px] w-[95px] rounded-xl py-2 px-2"
-            />{" "}
-          </td>
-          {/* <td className='tdFont'>{photo}</td> */}
-          <td className="tableData text-start">{title}</td>
-          <td className="tdFont">{city}</td>
-          <td className="tdFont">{featured === "true" ? "Yes" : "No"}</td>
-          <td className="tdFont">{maxGroupSize}</td>
-          <td className="tdFont">{reviews.length}</td>
-          {/* <td>
-            <Link to={`/tours/${tour._id}`} className="Greenbtn  my-2 mx-2 ">
-              View
-            </Link>
-          </td> */}
-          <td className="flex gap-2 w-full my-6">
-            <Link
-              to={`/update-tour/${tour._id}`}
-              className="text-blue-500 hover:scale-125 hover:rotate-12 duration-200 hover:text-blue-900"
-            >
-              <FaEdit size={25} />
-            </Link>
-            /
-            <button
-              onClick={handleDelete}
-              className="text-red-500 hover:scale-125 hover:rotate-12 duration-200 hover:text-red-900"
-            >
-              <MdDelete size={25} />
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </>
+    <div className="grid grid-cols-8 gap-2 items-center bg-[#00291e]/70 text-white p-2 rounded-xl hover:bg-[#00391f]/80 transition-all">
+      <p className="text-center">{index}</p>
+      <div className="flex justify-center items-center">
+        <img
+          src={photo}
+          alt={title}
+          className="h-16 w-24 object-cover rounded-xl"
+        />
+      </div>
+      <p className="text-left">{title}</p>
+      <p className="text-center">{city}</p>
+      <p className="text-center">{featured ? "Yes" : "No"}</p>
+      <p className="text-center">{maxGroupSize}</p>
+      <p className="text-center">{reviews.length}</p>
+      <div className="flex justify-center gap-2">
+        <Link
+          to={`/update-tour/${_id}`}
+          className="text-blue-400 hover:text-blue-600"
+        >
+          <FaEdit size={22} />
+        </Link>
+        <button
+          onClick={handleDelete}
+          className="text-red-400 hover:text-red-600"
+        >
+          <MdDelete size={22} />
+        </button>
+      </div>
+    </div>
   );
 };
 

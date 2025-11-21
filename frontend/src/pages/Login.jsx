@@ -1,142 +1,217 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import LoginImg from "./../assets/images/login2.png";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import BASE_URL from "../utils/config";
+import PageWrapper from "../components/PageWrapper";
+import back4 from "../assets/images/bac4.png";
+import { Eye, EyeOff } from "lucide-react";
+import Header from "../components/Header/Header";
 
 const Login = () => {
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [dots, setDots] = useState([]);
   const navigate = useNavigate();
-  const { dispatch, role } = useContext(AuthContext);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const { dispatch } = useContext(AuthContext);
 
-  const handleInput = (e) => {
+  const handleInput = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const toastStyle = {
+    fontFamily: "'Outfit', sans-serif",
+    fontWeight: "600",
+    border: "1px solid #ff4444",
+    borderRadius: "12px",
+    boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
+    padding: "10px 14px",
+    fontSize: "14px",
+    color: "#f4fff4",
+  };
+
+  const notifySuccess = (message) => {
+    toast.dismiss("login-success");
+    toast.success(message, {
+      toastId: "login-success",
+      position: "top-center",
+      autoClose: 2500,
+      style: { ...toastStyle, background: "#004d33", border: "1px solid #00a86b" },
+    });
+  };
+
+  const notifyError = (message) => {
+    toast.dismiss("login-error");
+    toast.error(message, {
+      toastId: "login-error",
+      position: "top-center",
+      autoClose: 2500,
+      style: { ...toastStyle, background: "#8b0000", border: "1px solid #ff4444" },
+    });
   };
 
   const logInHandler = async (e) => {
     e.preventDefault();
-
+    setIsLoading(true);
     try {
       const response = await fetch(`${BASE_URL}/auth/login`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
       const result = await response.json();
-
       if (response.ok) {
         dispatch({
           type: "LOGIN_SUCCESS",
-          payload: {
-            user: result.data,
-            token: result.token,
-            role: result.role,
-          },
+          payload: { user: result.data, token: result.token, role: result.role },
         });
-        toast.success(result.message);
-
-        {
-          result.role === "admin" ? navigate("/all-booking") : navigate("/");
-        }
+        notifySuccess("Login successful!");
+        result.role === "admin" ? navigate("/all-booking") : navigate("/");
       } else {
-        toast.error(result.message);
+        notifyError(result.message || "Invalid credentials!");
       }
-    } catch (err) {
-      toast.error("Server not responding");
+    } catch {
+      notifyError("Server not responding!");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center px-6 bg-gray-100">
-      <div className="bg-white p-4 md:p-8 rounded-lg shadow-md w-full max-w-xl md:max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12">
-        {/* Login Photo */}
-        <div className="hidden md:block">
-          <img
-            src={LoginImg}
-            alt="Trips Travels Logo"
-            className="mx-auto h-full object-cover"
-          />
-        </div>
+  useEffect(() => {
+    const initialDots = Array.from({ length: 10 }).map(() => ({
+      top: Math.random() * 90 + 5,
+      left: Math.random() * 90 + 5,
+      size: Math.random() * 4 + 2,
+      dx: (Math.random() - 0.5) / 3,
+      dy: (Math.random() - 0.5) / 3,
+      opacity: Math.random() * 0.4 + 0.3,
+    }));
+    setDots(initialDots);
 
-        {/* Login Form */}
-        <div className="flex flex-col justify-center">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
-              Login
-            </h2>
-            <p className="text-sm md:text-base text-gray-500">
-              Enter your credentials to access your account.
-            </p>
+    const interval = setInterval(() => {
+      setDots((prev) =>
+        prev.map((d) => ({
+          ...d,
+          top: Math.min(Math.max(d.top + d.dy, 5), 95),
+          left: Math.min(Math.max(d.left + d.dx, 5), 95),
+        }))
+      );
+    }, 60);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <PageWrapper>
+      <Header />
+      <div
+        className="fixed inset-0 z-0"
+        style={{
+          backgroundColor: "#00291f",
+          backgroundImage: `linear-gradient(145deg, rgba(0,41,31,0.95), rgba(0,77,47,0.9)), url(${back4})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundAttachment: "fixed",
+          width: "100%",
+          height: "100vh",
+          minHeight: "100vh",
+          filter: "blur(4px)",
+          transform: "scale(1.04)",
+        }}
+      />
+      <section className="relative z-10 flex justify-center items-center px-4 sm:px-6 min-h-screen sm:items-start sm:pt-40">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -30 }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
+          className="relative rounded-2xl overflow-hidden shadow-xl w-full max-w-[380px] sm:max-w-[480px] p-5 sm:p-6 cursor-pointer"
+          style={{
+            background: "rgba(0,0,0,0.6)",
+            backdropFilter: "blur(8px)",
+          }}
+        >
+          {/* Dots */}
+          <div className="hidden sm:block absolute inset-0 -z-10">
+            {dots.map((d, idx) => (
+              <div
+                key={idx}
+                style={{
+                  position: "absolute",
+                  top: `${d.top}%`,
+                  left: `${d.left}%`,
+                  width: `${d.size}px`,
+                  height: `${d.size}px`,
+                  backgroundColor: `rgba(0,255,128,${d.opacity})`,
+                  borderRadius: "50%",
+                  boxShadow: `0 0 4px rgba(0,255,128,${d.opacity}), 0 0 8px rgba(0,255,128,${d.opacity})`,
+                  pointerEvents: "none",
+                }}
+              />
+            ))}
           </div>
 
-          <form onSubmit={logInHandler} className="space-y-4 md:space-y-6">
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-md md:text-lg font-medium text-gray-600"
-              >
-                Email
-              </label>
+          <div className="px-1 sm:px-2">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 text-green-100 text-center" style={{ fontFamily: "'Cinzel', serif" }}>
+              Login <span className="text-[#00a86b]">Account</span>
+            </h2>
+
+            <form onSubmit={logInHandler} className="space-y-3">
               <input
                 type="email"
                 name="email"
-                placeholder="Enter your email"
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-BaseColor"
+                placeholder="Your Email"
                 value={formData.email}
                 onChange={handleInput}
-                required
+                className="w-full px-4 py-3 rounded-lg bg-black bg-opacity-30 placeholder-green-200 text-white border border-green-700 focus:ring-2 focus:ring-green-500"
+                style={{ fontFamily: "'Cormorant Garamond', serif" }}
               />
-            </div>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="Password"
+                  value={formData.password}
+                  onChange={handleInput}
+                  className="w-full px-4 py-3 rounded-lg bg-black bg-opacity-30 placeholder-green-200 text-white border border-green-700 focus:ring-2 focus:ring-green-500 pr-10"
+                  style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-300 hover:text-white transition-colors"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
 
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-md md:text-lg font-medium text-gray-600"
-              >
-                Password
-              </label>
-              <input
-                type="password"
-                name="password"
-                placeholder="Enter your password"
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-BaseColor"
-                value={formData.password}
-                onChange={handleInput}
-                required
-              />
-            </div>
-
-            <div>
               <button
                 type="submit"
-                className="w-full btn my-3"
                 disabled={isLoading}
+                className="w-full px-5 py-2 rounded-lg text-white font-semibold transition bg-[#004d33] hover:bg-[#00a86b] hover:scale-105 shadow-md"
+                style={{ fontFamily: "'Cinzel', serif" }}
               >
                 {isLoading ? "Logging in..." : "Login"}
               </button>
-              <p className="text-sm md:text-base text-center">
-                Don't have an Account?{" "}
+
+              <p className="text-sm text-green-100 text-center mt-3" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                Don’t have an account?{" "}
                 <Link
-                  className="text-BaseColor hover:text-BHoverColor"
                   to="/register"
+                  className="text-[#00a86b] hover:text-green-300 font-semibold"
+                  style={{ fontFamily: "'Cinzel', serif" }}
                 >
                   Register here
                 </Link>
               </p>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+            </form>
+          </div>
+        </motion.div>
+      </section>
+    </PageWrapper>
   );
 };
 
