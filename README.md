@@ -91,6 +91,6 @@ Git / GitHub
 
 Harshal patil – Final Year College Project
 
-Email: HarshEditz79@gmail.com.com
+Email: harshEditz79@gmail.com.com
 
 GitHub: https://github.com/harsheditz79
