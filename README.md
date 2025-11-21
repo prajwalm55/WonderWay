@@ -24,39 +24,7 @@ This project is designed for final year college submission and includes features
 - Real-time toast notifications
 - Error handling and validation
 - JWT-based authentication for secure login
-
----
-
-## 🔹 Project Structure
-
-travely-project/
-├─ backend/
-│ ├─ controllers/ # API controllers for booking and user
-│ ├─ models/ # Mongoose models
-│ ├─ routes/ # Express routes
-│ ├─ middleware/ # Auth & error handling middleware
-│ ├─ utils/ # Helper functions
-│ └─ server.js # Entry point for backend server
-│
-├─ frontend/
-│ ├─ public/ # Static files
-│ ├─ src/
-│ │ ├─ assets/ # Images, icons, logos
-│ │ ├─ components/ # Reusable components (Header, Footer, Loader)
-│ │ ├─ pages/ # Pages (Home, Booked, Profile)
-│ │ ├─ context/ # AuthContext for user state
-│ │ ├─ hooks/ # Custom React hooks
-│ │ ├─ router/ # React Router setup
-│ │ └─ shared/ # Shared UI elements
-│ ├─ tailwind.config.js
-│ ├─ postcss.config.js
-│ └─ vite.config.js
-│
-├─ .eslintrc.cjs # ESLint config
-├─ .gitignore
-├─ package.json
-└─ README.md
-
+  
 ---
 
 ## 🔹 Installation
@@ -122,5 +90,7 @@ Git / GitHub
 🔹 Author
 
 Harshal patil – Final Year College Project
+
 Email: HarshEditz79@gmail.com.com
+
 GitHub: https://github.com/harsheditz79
