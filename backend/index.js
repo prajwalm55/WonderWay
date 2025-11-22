@@ -37,6 +37,7 @@ mongoose
 const allowedOrigins = [
   "http://localhost:5173",
   "http://192.168.43.113:5173",
+  "https://travely-management-system-backend.onrender.com",
 ];
 
 app.use(
