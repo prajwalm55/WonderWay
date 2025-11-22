@@ -1,5 +1,5 @@
 // index.js
-// Main entry point for the backend server (Local Development Setup)
+// Backend Server (Ready for Render Deployment)
 
 import express from "express";
 import mongoose from "mongoose";
@@ -26,24 +26,28 @@ const PORT = process.env.PORT || 4000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Connect to MongoDB
+// Connect to MongoDB (Atlas with TLS fix)
 mongoose
-  .connect(process.env.MONGO_URL)
+  .connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    tlsAllowInvalidCertificates: true,
+    tlsAllowInvalidHostnames: true
+  })
   .then(() => console.log("✅ MongoDB connected successfully"))
   .catch((err) => console.error("❌ MongoDB connection failed:", err));
 
 // Middleware Configuration
-// Allow CORS from both localhost and local network IP for mobile access
 const allowedOrigins = [
   "http://localhost:5173",
-  "http://192.168.43.113:5173",
-  "https://travely-management-system-backend.onrender.com",
+  "http://192.168.43.113:5173", // replace with your local network IP if needed
+  "https://travely-management-system-backend.onrender.com", // Render backend URL
 ];
 
 app.use(
   cors({
     origin: allowedOrigins,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], // PATCH added
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
 );
@@ -72,10 +76,10 @@ app.use("/api/booking", bookingRoutes);
 
 // Default Route
 app.get("/", (req, res) => {
-  res.send("Welcome to the Trips & Travels API (Local Version)!");
+  res.send("Welcome to the Trips & Travels API!");
 });
 
 // Start the Server
 app.listen(PORT, () => {
-  console.log(`🚀 Server is running locally on port ${PORT} Travely`);
+  console.log(`🚀 Server is running on port ${PORT}`);
 });
