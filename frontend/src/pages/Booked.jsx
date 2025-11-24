@@ -18,7 +18,7 @@ const DARK_CARD_BG = "rgba(18, 55, 42, 0.98)";
 const SUCCESS_BG = "#004d33";
 const PREMIUM_ACCENT_GREEN = "#6ee7b7";
 
-// Default toast 
+// Default toast
 const DEFAULT_TOAST_OPTIONS = {
   position: "top-right",
   autoClose: 2500,
@@ -33,7 +33,6 @@ const DEFAULT_TOAST_OPTIONS = {
 };
 
 const notify = (message, type = "success", id = "booked-toast") => {
-
   if (toast.isActive(id)) return;
 
   let toastFn = toast.success;
@@ -84,7 +83,8 @@ const notify = (message, type = "success", id = "booked-toast") => {
 // DOWNLOAD TICKET
 const handleDownloadTicket = async () => {
   const ticket = document.getElementById("ticket-card");
-  if (!ticket) return notify("Ticket not found!", "info", "download-ticket-toast");
+  if (!ticket)
+    return notify("Ticket not found!", "info", "download-ticket-toast");
 
   notify("Preparing HD Ticket...", "info", "download-ticket-toast");
 
@@ -103,13 +103,30 @@ const handleDownloadTicket = async () => {
       format: [canvas.width, canvas.height],
     });
 
-    pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height, undefined, "FAST");
+    pdf.addImage(
+      imgData,
+      "PNG",
+      0,
+      0,
+      canvas.width,
+      canvas.height,
+      undefined,
+      "FAST"
+    );
     pdf.save("Travely-Ticket.pdf");
 
-    notify("Ticket Downloaded Successfully!", "success", "download-ticket-toast");
+    notify(
+      "Ticket Downloaded Successfully!",
+      "success",
+      "download-ticket-toast"
+    );
   } catch (err) {
     console.error("Error generating ticket PDF:", err);
-    notify("Failed to prepare ticket. Try again.", "error", "download-ticket-toast");
+    notify(
+      "Failed to prepare ticket. Try again.",
+      "error",
+      "download-ticket-toast"
+    );
   }
 };
 
@@ -119,10 +136,20 @@ const Booked = () => {
 
   const bookingState = location.state || {};
   const [booking, setBooking] = useState(bookingState.booking || null);
-  const [bookingId, setBookingId] = useState(bookingState.bookingId || paramBookingId || null);
+  const [bookingId, setBookingId] = useState(
+    bookingState.bookingId || paramBookingId || null
+  );
 
   const toastShownRef = useRef(false);
   const mountedRef = useRef(false);
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const userName = booking?.fullName?.trim() || "Passenger";
 
@@ -140,15 +167,17 @@ const Booked = () => {
 
   // Show "Booking confirmed"
   useEffect(() => {
-  
     if (!toastShownRef.current) {
-      notify("🎉 Booking confirmed! Your ticket is ready.", "success", "booked-toast");
+      notify(
+        "🎉 Booking confirmed! Your ticket is ready.",
+        "success",
+        "booked-toast"
+      );
       toastShownRef.current = true;
     }
 
     window.scrollTo({ top: 0, behavior: "smooth" });
 
-    // track mounted state
     mountedRef.current = true;
     return () => {
       mountedRef.current = false;
@@ -162,19 +191,29 @@ const Booked = () => {
     const fetchBooking = async () => {
       try {
         if (!booking && bookingId) {
-          const res = await axios.get(`http://localhost:4000/api/booking/${bookingId}`);
+          const res = await axios.get(
+            `https://travely-management-system-backend.onrender.com/api/booking/${bookingId}`
+          );
           if (res?.data?.success && !cancelled) {
             setBooking(res.data.data);
             if (!bookingId && res.data.data.bookingCode) {
               setBookingId(res.data.data.bookingCode);
             }
           } else if (!res?.data?.success) {
-            notify("Unable to fetch booking details.", "info", "fetch-booking-toast");
+            notify(
+              "Unable to fetch booking details.",
+              "info",
+              "fetch-booking-toast"
+            );
           }
         }
       } catch (error) {
         console.error("Fetch booking error:", error);
-        notify("Failed to fetch booking. Check your connection.", "error", "fetch-booking-toast");
+        notify(
+          "Failed to fetch booking. Check your connection.",
+          "error",
+          "fetch-booking-toast"
+        );
       }
     };
 
@@ -185,6 +224,7 @@ const Booked = () => {
     };
   }, [bookingId, booking]);
 
+  // Desktop positions
   const POSITIONS = {
     passengerTop: "110px",
     passengerLeft: "80px",
@@ -196,12 +236,33 @@ const Booked = () => {
     personsLeft: "80px",
     priceTop: "208px",
     priceLeft: "80px",
-    qrRight: "70px",
+    qrRight: "80px",
     logoTop: "30px",
     logoLeft: "80px",
   };
 
-  const QR_LINK = `http://192.168.43.113:5173/verify-booking/${booking?.bookingCode || bookingId}`;
+  // Mobile positions (adjust as needed)
+  const MOBILE_POSITIONS = {
+    passengerTop: "85px",
+    passengerLeft: "15px",
+    destinationTop: "105px",
+    destinationLeft: "15px",
+    dateTop: "125px",
+    dateLeft: "15px",
+    personsTop: "143px",
+    personsLeft: "15px",
+    priceTop: "162px",
+    priceLeft: "15px",
+    qrRight: "3px",
+    logoTop: "42px",
+    logoLeft: "10px",
+  };
+
+  const activePositions = isMobile ? MOBILE_POSITIONS : POSITIONS;
+
+  const QR_LINK = `https://travely-management-system-frontend.onrender.com/verify-booking/${
+    booking?.bookingCode || bookingId
+  }`;
 
   return (
     <PageWrapper>
@@ -245,8 +306,8 @@ const Booked = () => {
             id="ticket-card"
             className="relative mb-2"
             style={{
-              width: "600px",
-              height: "300px",
+              width: isMobile ? "325px" : "600px",
+              height: isMobile ? "250px" : "300px",
               borderRadius: "18px",
               overflow: "hidden",
               padding: "20px",
@@ -260,12 +321,16 @@ const Booked = () => {
           >
             {/* TRAVELY LOGO */}
             <div
-              style={{ position: "absolute", top: POSITIONS.logoTop, left: POSITIONS.logoLeft }}
+              style={{
+                position: "absolute",
+                top: activePositions.logoTop,
+                left: activePositions.logoLeft,
+              }}
             >
               <span
                 style={{
                   color: ACCENT_GOLD,
-                  fontSize: "24px",
+                  fontSize: isMobile ? "15px" : "24px",
                   fontWeight: "700",
                   fontFamily: "'Cinzel Decorative', cursive",
                 }}
@@ -275,9 +340,9 @@ const Booked = () => {
               <div
                 style={{
                   color: ACCENT_GOLD,
-                  fontSize: "18px",
+                  fontSize: isMobile ? "11px" : "18px",
                   fontWeight: "600",
-                  marginTop: "2px",
+                  marginTop: "1px",
                 }}
               >
                 Travely Booking Service
@@ -285,70 +350,84 @@ const Booked = () => {
             </div>
 
             {/* INFO FIELDS */}
-            {["Passenger", "Destination", "Date", "Persons", "Price"].map((label, idx) => {
-              const infoMap = {
-                Passenger: {
-                  value: userName,
-                  top: POSITIONS.passengerTop,
-                  left: POSITIONS.passengerLeft,
-                },
-                Destination: {
-                  value: booking?.tourName || "-",
-                  top: POSITIONS.destinationTop,
-                  left: POSITIONS.destinationLeft,
-                },
-                Date: {
-                  value: formatDate(booking?.date),
-                  top: POSITIONS.dateTop,
-                  left: POSITIONS.dateLeft,
-                },
-                Persons: {
-                  value: booking?.maxGroupSize || "-",
-                  top: POSITIONS.personsTop,
-                  left: POSITIONS.personsLeft,
-                },
-                Price: {
-                  value: booking ? `₹${Number(booking.totalPrice).toLocaleString()}` : "-",
-                  top: POSITIONS.priceTop,
-                  left: POSITIONS.priceLeft,
-                },
-              };
-              const info = infoMap[label];
-              return (
-                <p
-                  key={idx}
-                  style={{
-                    position: "absolute",
-                    top: info.top,
-                    left: info.left,
-                    color: ACCENT_GOLD,
-                    fontFamily: "'Cinzel', serif",
-                    fontSize: "15px",
-                    fontWeight: "700",
-                  }}
-                >
-                  {label}: <span style={{ color: "#fff5d0" }}>{info.value}</span>
-                </p>
-              );
-            })}
+            {["Passenger", "Destination", "Date", "Persons", "Price"].map(
+              (label, idx) => {
+                const infoMap = {
+                  Passenger: {
+                    value: userName,
+                    top: activePositions.passengerTop,
+                    left: activePositions.passengerLeft,
+                  },
+                  Destination: {
+                    value: booking?.tourName || "-",
+                    top: activePositions.destinationTop,
+                    left: activePositions.destinationLeft,
+                  },
+                  Date: {
+                    value: formatDate(booking?.date),
+                    top: activePositions.dateTop,
+                    left: activePositions.dateLeft,
+                  },
+                  Persons: {
+                    value: booking?.maxGroupSize || "-",
+                    top: activePositions.personsTop,
+                    left: activePositions.personsLeft,
+                  },
+                  Price: {
+                    value: booking
+                      ? `₹${Number(booking.totalPrice).toLocaleString()}`
+                      : "-",
+                    top: activePositions.priceTop,
+                    left: activePositions.priceLeft,
+                  },
+                };
+                const info = infoMap[label];
+                return (
+                  <p
+                    key={idx}
+                    style={{
+                      position: "absolute",
+                      top: info.top,
+                      left: info.left,
+                      color: ACCENT_GOLD,
+                      fontFamily: "'Cinzel', serif",
+                      fontSize: isMobile ? "12px" : "15px",
+                      fontWeight: "700",
+                    }}
+                  >
+                    {label}:{" "}
+                    <span style={{ color: "#fff5d0" }}>{info.value}</span>
+                  </p>
+                );
+              }
+            )}
 
             {/* QR + BOOKING ID */}
             <div
               style={{
                 position: "absolute",
                 top: "40px",
-                right: POSITIONS.qrRight,
+                right: activePositions.qrRight,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 gap: "6px",
               }}
             >
-              <img src={logo} alt="Logo" style={{ width: "45px", height: "45px" }} />
-              <QRCode value={QR_LINK} size={115} bgColor="transparent" fgColor="#000" />
+              <img
+                src={logo}
+                alt="Logo"
+                style={{ width: isMobile ? "35px" : "45px", height: isMobile ? "35px" : "45px" }}
+              />
+              <QRCode
+                value={QR_LINK}
+                size={isMobile ? 90 : 115}
+                bgColor="transparent"
+                fgColor="#000"
+              />
               <p
                 style={{
-                  fontSize: "12px",
+                  fontSize: isMobile ? "10px" : "12px",
                   fontWeight: "800",
                   color: "#000",
                   padding: "3px 7px",

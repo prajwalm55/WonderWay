@@ -20,7 +20,7 @@ import UpdateTours from '../Dashboard/AdminPanel/UpdateTour';
 import VerifyBooking from '../pages/VerifyBooking';
 
 // Gallery
-import Gallery from '../components/Gallery/Gallery.jsx'; 
+import Gallery from '../components/Gallery/Gallery.jsx';
 
 const Router = () => {
   return (
@@ -43,7 +43,8 @@ const Router = () => {
       <Route path='/booked' element={<Booked />} />
       <Route path='/booked/:bookingId' element={<Booked />} />
 
-      {/* Verify Booking */}
+      {/* Verify Booking (Fixed) */}
+      <Route path='/verify-booking' element={<VerifyBooking />} />
       <Route path='/verify-booking/:bookingId' element={<VerifyBooking />} />
 
       {/* User & Admin */}

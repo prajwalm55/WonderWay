@@ -13,7 +13,6 @@ const Bookings = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       if (!user || !token) {
-        console.log("User or Token not found");
         setError(true);
         setLoading(false);
         return;
@@ -25,7 +24,7 @@ const Bookings = () => {
         });
 
         if (res.status === 401) {
-          console.log("Unauthorized Access - Logging out");
+          // Token invalid or expired
           dispatch({ type: "LOGOUT" });
           setError(true);
           setLoading(false);
@@ -35,11 +34,10 @@ const Bookings = () => {
         if (!res.ok) throw new Error(`Fetch failed with status: ${res.status}`);
 
         const data = await res.json();
-        console.log("Fetched Bookings Data:", data);
-        setBookings(data.success && data.data ? data.data : []);
+        setBookings(data?.data || []);
         setLoading(false);
-      } catch (error) {
-        console.error("Error fetching bookings:", error);
+      } catch (err) {
+        console.error("Error fetching bookings:", err);
         setError(true);
         setLoading(false);
       }
@@ -70,7 +68,7 @@ const Bookings = () => {
             <BookingCard
               key={booking._id}
               booking={booking}
-              setBookings={setBookings}
+              setBookings={setBookings} // ✅ Pass state updater
             />
           ))}
         </div>

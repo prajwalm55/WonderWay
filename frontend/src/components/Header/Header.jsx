@@ -13,14 +13,12 @@ const Header = ({ triggerLoader }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const prevScroll = useRef(window.scrollY);
   const menuRef = useRef(null);
   const navigate = useNavigate();
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
-  // Logout handler — triggers loader, updates state, shows toast, then navigates
   const logout = () => {
     triggerLoader?.();
     dispatch({ type: "LOGOUT" });
@@ -30,18 +28,13 @@ const Header = ({ triggerLoader }) => {
       position: "top-right",
       autoClose: 1500,
       transition: Slide,
-      style: {
-        background: "#004d33",
-        color: "#f4fff4",
-        border: "1px solid #00a86b",
-        borderRadius: "12px",
-      },
+      style: { background: "#004d33", color: "#f4fff4", borderRadius: "12px" },
     });
 
     setTimeout(() => navigate("/home"), 300);
   };
 
-  // Navbar visibility on scroll
+  // Scroll effect
   useEffect(() => {
     const handleScroll = () => {
       const currentScroll = window.scrollY;
@@ -49,7 +42,6 @@ const Header = ({ triggerLoader }) => {
       setIsScrolled(currentScroll > 10);
       prevScroll.current = currentScroll;
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -57,16 +49,11 @@ const Header = ({ triggerLoader }) => {
   // Close mobile menu on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setMenuOpen(false);
-      }
+      if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false);
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  useEffect(() => setMounted(true), []);
 
   const navItems = ["Home", "About", "Tours", "Gallery", "Contact"];
 
@@ -82,7 +69,7 @@ const Header = ({ triggerLoader }) => {
       }}
     >
       <div className="flex items-center justify-between px-6 md:px-10 h-full">
-
+        {/* Logo + Title */}
         <div className="flex items-center gap-2 select-none">
           <div className="rounded-full p-[3px] border-2 border-white">
             <img src={Logo} alt="Logo" className="w-12 h-12 rounded-full" />
@@ -90,24 +77,22 @@ const Header = ({ triggerLoader }) => {
           <span className="text-white text-2xl font-semibold">Travely</span>
         </div>
 
+        {/* Desktop Nav */}
         <nav className="hidden md:flex gap-8 items-center mx-auto">
           {navItems.map((item, index) => (
             <Link
               key={item}
               to={`/${item.toLowerCase()}`}
               className="relative text-white font-medium text-lg"
-              style={{
-                opacity: mounted ? 1 : 0,
-                transform: mounted ? "translateY(0)" : "translateY(-20px)",
-                transition: `all 0.8s ease ${index * 0.15 + 0.3}s`,
-              }}
             >
               <span className="nav-link-animate">{item}</span>
             </Link>
           ))}
         </nav>
 
+        {/* Profile + Mobile Menu Button */}
         <div className="flex items-center gap-2">
+          {/* Profile Section */}
           {user && (
             <Link
               to="/my-account"
@@ -123,28 +108,31 @@ const Header = ({ triggerLoader }) => {
             </Link>
           )}
 
+          {/* Desktop Logout / Sign In */}
           {user ? (
             <button
               onClick={logout}
-              className="bg-[#B71C1C] hover:bg-[#8B0000] text-white font-semibold px-5 py-2 rounded-full shadow-md transition-all"
+              className="hidden md:block bg-[#B71C1C] hover:bg-[#8B0000] text-white font-semibold px-5 py-2 rounded-full shadow-md transition-all"
             >
               Logout
             </button>
           ) : (
             <Link
               to="/login"
-              className="bg-[#B71C1C] hover:bg-[#8B0000] text-white font-semibold px-5 py-2 rounded-full shadow-md transition-all"
+              className="hidden md:block bg-[#B71C1C] hover:bg-[#8B0000] text-white font-semibold px-5 py-2 rounded-full shadow-md transition-all"
             >
               Sign In
             </Link>
           )}
 
+          {/* Hamburger Menu */}
           <button className="md:hidden text-white text-3xl" onClick={toggleMenu}>
             {menuOpen ? <IoClose /> : <BiMenu />}
           </button>
         </div>
       </div>
 
+      {/* Mobile Nav Menu */}
       <div
         ref={menuRef}
         className={`md:hidden absolute top-full left-0 w-full bg-[#16423c]/95 backdrop-blur-2xl flex flex-col items-center gap-6 py-6 rounded-b-2xl transition-all duration-700 overflow-hidden ${
@@ -157,16 +145,12 @@ const Header = ({ triggerLoader }) => {
             to={`/${item.toLowerCase()}`}
             onClick={() => setMenuOpen(false)}
             className="relative text-white text-lg font-medium"
-            style={{
-              opacity: menuOpen ? 1 : 0,
-              transform: menuOpen ? "translateY(0)" : "translateY(-20px)",
-              transition: `all 0.6s ease ${index * 0.1}s`,
-            }}
           >
             <span className="nav-link-animate">{item}</span>
           </Link>
         ))}
 
+        {/* Mobile Logout / Sign In */}
         {user ? (
           <button
             onClick={() => {

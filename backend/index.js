@@ -42,6 +42,7 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://192.168.43.113:5173", // replace with your local network IP if needed
   "https://travely-management-system-backend.onrender.com", // Render backend URL
+  "https://travely-management-system-frontend.onrender.com",
 ];
 
 app.use(

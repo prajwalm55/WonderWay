@@ -64,13 +64,16 @@ const VerifyBooking = () => {
 
     try {
       const res = await axios.get(
-        `http://192.168.43.113:4000/api/booking/code/${enteredId}`
+        `https://travely-management-system-backend.onrender.com/api/booking/code/${enteredId}`
       );
+
       const booking = res.data.data;
       setBookingData(booking);
 
-      if (booking.status === "completed") notify("✔ Booking already completed!", "success");
-      else if (booking.status === "cancelled") notify("❌ Booking cancelled!", "error");
+      if (booking.status === "completed")
+        notify("✔ Booking already completed!", "success");
+      else if (booking.status === "cancelled")
+        notify("❌ Booking cancelled!", "error");
       else notify("✔ Booking Verified!", "success");
     } catch (err) {
       const msg = err.response?.data?.message || "Verification failed!";
@@ -81,7 +84,8 @@ const VerifyBooking = () => {
     }
   };
 
-  const cameraSupported = () => !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+  const cameraSupported = () =>
+    !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
 
   return (
     <PageWrapper>
@@ -130,7 +134,11 @@ const VerifyBooking = () => {
                 delay={300}
                 onScan={handleScan}
                 onError={handleError}
-                style={{ width: "260px", margin: "10px auto", borderRadius: "10px" }}
+                style={{
+                  width: "260px",
+                  margin: "10px auto",
+                  borderRadius: "10px",
+                }}
               />
             )}
           </QRBoundary>
@@ -154,7 +162,11 @@ const VerifyBooking = () => {
           <button
             onClick={handleVerify}
             className="w-full py-3 rounded-lg font-bold mb-2"
-            style={{ background: ACCENT_GOLD, color: "#000", fontFamily: "'Cinzel', serif" }}
+            style={{
+              background: ACCENT_GOLD,
+              color: "#000",
+              fontFamily: "'Cinzel', serif",
+            }}
             disabled={loading}
           >
             {loading ? "Verifying..." : "Verify Booking"}
@@ -163,16 +175,37 @@ const VerifyBooking = () => {
           {bookingData && (
             <div
               className="mt-6 p-5 rounded-xl"
-              style={{ background: "rgba(0,0,0,0.55)", border: `1px solid ${ACCENT_GOLD}`, color: "#fff" }}
+              style={{
+                background: "rgba(0,0,0,0.55)",
+                border: `1px solid ${ACCENT_GOLD}`,
+                color: "#fff",
+              }}
             >
-              <p><strong>Name:</strong> {bookingData.fullName}</p>
-              <p><strong>Tour:</strong> {bookingData.tourName}</p>
-              <p><strong>Date:</strong> {bookingData.date}</p>
-              <p><strong>Persons:</strong> {bookingData.maxGroupSize}</p>
-              <p><strong>Price:</strong> ₹{bookingData.totalPrice.toLocaleString()}</p>
-              <p><strong>Booking ID:</strong> {bookingData.bookingCode}</p>
-              {bookingData.status === "cancelled" && <p className="mt-2 text-red-400 font-semibold">❌ Cancelled</p>}
-              {bookingData.status === "completed" && <p className="mt-2 text-green-400 font-semibold">✔ Completed</p>}
+              <p>
+                <strong>Name:</strong> {bookingData.fullName}
+              </p>
+              <p>
+                <strong>Tour:</strong> {bookingData.tourName}
+              </p>
+              <p>
+                <strong>Date:</strong> {bookingData.date}
+              </p>
+              <p>
+                <strong>Persons:</strong> {bookingData.maxGroupSize}
+              </p>
+              <p>
+                <strong>Price:</strong> ₹
+                {bookingData.totalPrice.toLocaleString()}
+              </p>
+              <p>
+                <strong>Booking ID:</strong> {bookingData.bookingCode}
+              </p>
+              {bookingData.status === "cancelled" && (
+                <p className="mt-2 text-red-400 font-semibold">❌ Cancelled</p>
+              )}
+              {bookingData.status === "completed" && (
+                <p className="mt-2 text-green-400 font-semibold">✔ Completed</p>
+              )}
             </div>
           )}
         </div>
