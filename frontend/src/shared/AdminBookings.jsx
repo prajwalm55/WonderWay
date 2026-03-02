@@ -24,7 +24,7 @@ const AdminBookings = ({ booking, refreshBookings }) => {
   const showSuccess = (msg) => toast.success(msg);
   const showError = (msg) => toast.error(msg);
 
-  // ✅ Soft Complete (PATCH) for Active bookings
+  // ✅ Complete booking
   const handleComplete = async () => {
     if (!token) return showError("Unauthorized!");
     if (!window.confirm("Mark this booking as completed?")) return;
@@ -33,12 +33,11 @@ const AdminBookings = ({ booking, refreshBookings }) => {
       const res = await fetch(`${BASE_URL}/booking/${_id}/complete`, {
         method: "PATCH",
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "completed" }),
       });
       const data = await res.json();
       if (res.ok) {
         showSuccess(data.message || "Booking marked completed");
-        refreshBookings(); // refresh bookings after update
+        refreshBookings();
       } else {
         showError(data.message || "Failed to update booking");
       }
@@ -48,7 +47,30 @@ const AdminBookings = ({ booking, refreshBookings }) => {
     }
   };
 
-  // ✅ Hard delete for cancelled bookings
+  // ✅ Cancel booking
+  const handleCancel = async () => {
+    if (!token) return showError("Unauthorized!");
+    if (!window.confirm("Cancel this booking?")) return;
+
+    try {
+      const res = await fetch(`${BASE_URL}/booking/${_id}/cancel`, {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showSuccess(data.message || "Booking cancelled");
+        refreshBookings();
+      } else {
+        showError(data.message || "Failed to cancel booking");
+      }
+    } catch (err) {
+      console.error(err);
+      showError("Server error");
+    }
+  };
+
+  // ✅ Hard delete booking
   const handleDelete = async () => {
     if (!token) return showError("Unauthorized!");
     if (!window.confirm("Delete this booking permanently?")) return;
@@ -61,7 +83,7 @@ const AdminBookings = ({ booking, refreshBookings }) => {
       const data = await res.json();
       if (res.ok) {
         showSuccess(data.message || "Booking deleted successfully");
-        refreshBookings(); // refresh bookings after delete
+        refreshBookings();
       } else {
         showError(data.message || "Failed to delete booking");
       }
@@ -72,7 +94,7 @@ const AdminBookings = ({ booking, refreshBookings }) => {
   };
 
   return (
-    <tr className="text-center text-white font-[Cormorant_Garamond] text-xs md:text-sm hover:bg-[#004d33]/70 transition-all duration-200">
+    <tr className="text-center text-white font-[Cormorant_Garamond] text-xs md:text-sm hover:bg-[#005a3c]/70 transition-all duration-200">
       <td className="py-3 px-2">{tourName}</td>
       <td className="py-3 px-2">{fullName}</td>
       <td className="py-3 px-2">{userId}</td>
@@ -90,24 +112,32 @@ const AdminBookings = ({ booking, refreshBookings }) => {
           <span className="text-green-400 font-semibold">Active</span>
         )}
       </td>
-      <td className="py-3 px-2">
-        {status === "cancelled" ? (
+      <td className="py-3 px-2 flex flex-col gap-1 items-center justify-center">
+        {status === "active" && (
+          <>
+            <button
+              onClick={handleComplete}
+              className="bg-green-500 hover:bg-green-700 text-white px-3 py-1 rounded-xl transition-all duration-200 font-[Cinzel]"
+            >
+              Complete
+            </button>
+            <button
+              onClick={handleCancel}
+              className="bg-yellow-500 hover:bg-yellow-700 text-white px-3 py-1 rounded-xl transition-all duration-200 font-[Cinzel]"
+            >
+              Cancel
+            </button>
+          </>
+        )}
+        {status === "cancelled" && (
           <button
             onClick={handleDelete}
             className="bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded-xl transition-all duration-200 font-[Cinzel]"
           >
             Delete
           </button>
-        ) : status === "active" ? (
-          <button
-            onClick={handleComplete}
-            className="bg-green-500 hover:bg-green-700 text-white px-3 py-1 rounded-xl transition-all duration-200 font-[Cinzel]"
-          >
-            Complete
-          </button>
-        ) : (
-          <span>—</span>
         )}
+        {status === "completed" && <span>—</span>}
       </td>
     </tr>
   );

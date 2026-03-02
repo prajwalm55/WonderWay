@@ -65,7 +65,7 @@ const loginUser = async (req, res) => {
     const token = jwt.sign(
       { id: user._id, role: user.role },
       process.env.SECRET_KEY,
-      { expiresIn: "5d" }
+      { expiresIn: process.env.JWT_EXPIRE_TIME || "7d" }
     );
 
     // Save token in cookie

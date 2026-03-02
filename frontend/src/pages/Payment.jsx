@@ -19,7 +19,7 @@ const ACCENT_GREEN = "#00a86b";
 const ACCENT_RED = "#ff4444";
 const ACCENT_WARNING = "#facc15";
 
-const RAZORPAY_KEY_ID = "rzp_test_RRqFqHOYquESFJ";
+const RAZORPAY_KEY_ID = "rzp_test_SMLeSfbDIdFyFa";
 const FALLBACK_AMOUNT = 1;
 
 // Toast Function

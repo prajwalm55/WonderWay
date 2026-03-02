@@ -2,38 +2,17 @@ import React, { useContext, useEffect, useState } from "react";
 import { toast, Slide } from "react-toastify";
 import { AuthContext } from "../../context/AuthContext";
 import BASE_URL from "../../utils/config";
-import back4 from "../../assets/images/bac4.png";
 
 const Bookings = () => {
-  const { token } = useContext(AuthContext);
+  const { token, role } = useContext(AuthContext);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchBookings = async () => {
-      if (!token) return;
-
-      try {
-        const res = await fetch(`${BASE_URL}/booking/all`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await res.json();
-        if (data.success) setBookings(data.data);
-      } catch (err) {
-        console.error("❌ Admin bookings fetch error:", err);
-        showError("Failed to fetch bookings");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBookings();
-  }, [token]);
-
+  // ----------------------------
+  // Toast helpers
+  // ----------------------------
   const showSuccess = (msg) => {
-    toast.dismiss("admin-success");
     toast.success(msg, {
-      toastId: "admin-success",
       position: "top-right",
       autoClose: 2500,
       transition: Slide,
@@ -50,9 +29,7 @@ const Bookings = () => {
   };
 
   const showError = (msg) => {
-    toast.dismiss("admin-error");
     toast.error(msg, {
-      toastId: "admin-error",
       position: "top-right",
       autoClose: 2500,
       transition: Slide,
@@ -68,6 +45,39 @@ const Bookings = () => {
     });
   };
 
+  // ----------------------------
+  // Fetch Bookings
+  // ----------------------------
+  const fetchBookings = async () => {
+    if (!token) return;
+
+    setLoading(true);
+    const endpoint =
+      role === "admin"
+        ? `${BASE_URL}/booking/admin/all`
+        : `${BASE_URL}/booking`;
+
+    try {
+      const res = await fetch(endpoint, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (data.success) setBookings(data.data);
+    } catch (err) {
+      console.error("❌ Bookings fetch error:", err);
+      showError("Failed to fetch bookings");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBookings();
+  }, [token, role]);
+
+  // ----------------------------
+  // Handle Booking Completion
+  // ----------------------------
   const handleCompleted = async (_id) => {
     if (!token) return showError("Unauthorized! Please login again.");
 
@@ -75,12 +85,12 @@ const Bookings = () => {
       const res = await fetch(`${BASE_URL}/booking/${_id}/complete`, {
         method: "PATCH",
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "completed" }),
       });
       const data = await res.json();
+
       if (res.ok) {
         showSuccess(data.message || "Booking marked as completed");
-        setBookings(bookings.filter((b) => b._id !== _id));
+        fetchBookings(); // refresh bookings after action
       } else {
         showError(data.message || "Error completing booking");
       }
@@ -90,6 +100,9 @@ const Bookings = () => {
     }
   };
 
+  // ----------------------------
+  // Handle Booking Delete
+  // ----------------------------
   const handleDelete = async (_id) => {
     if (!token) return showError("Unauthorized! Please login again.");
     if (!window.confirm("Are you sure you want to delete this booking?")) return;
@@ -100,9 +113,10 @@ const Bookings = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
+
       if (res.ok) {
         showSuccess(data.message || "Booking deleted successfully");
-        setBookings(bookings.filter((b) => b._id !== _id));
+        fetchBookings(); // refresh bookings after delete
       } else {
         showError(data.message || "Error deleting booking");
       }
@@ -113,19 +127,18 @@ const Bookings = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-start justify-center relative pt-28 px-4 md:px-10 overflow-x-hidden">
-      {/* Background */}
-      <div
-        className="fixed inset-0 -z-10 bg-cover bg-center"
-        style={{
-          backgroundImage: `linear-gradient(145deg, rgba(0,41,31,0.95), rgba(0,77,47,0.9)), url(${back4})`,
-          filter: "blur(6px)",
-          transform: "scale(1.05)",
-        }}
-      ></div>
+    <div className="min-h-screen flex flex-col items-center relative pt-28 px-4 md:px-10 overflow-x-hidden bg-[#00391f]">
+      <div className="w-full max-w-6xl bg-[#004d33]/90 backdrop-blur-md rounded-2xl shadow-2xl p-6 md:p-10 text-white">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-[Cinzel]">Bookings</h2>
+          <button
+            onClick={fetchBookings}
+            className="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded-xl font-[Cinzel] transition-all"
+          >
+            Refresh
+          </button>
+        </div>
 
-      {/* Container */}
-      <div className="w-full max-w-6xl bg-[#00391f]/90 backdrop-blur-md rounded-2xl shadow-2xl p-6 md:p-10">
         {/* Desktop Table */}
         <div className="hidden md:block overflow-x-auto">
           <table className="table-auto w-full border-collapse text-white font-[Cormorant_Garamond]">
@@ -154,7 +167,7 @@ const Bookings = () => {
                 bookings.map((b, index) => (
                   <tr
                     key={b._id}
-                    className="text-center border-b border-green-700/30 hover:bg-[#004d33]/70 transition-all duration-200 text-xs md:text-sm"
+                    className="text-center border-b border-green-700/30 hover:bg-[#005a3c]/70 transition-all duration-200 text-xs md:text-sm"
                   >
                     <td className="py-3 px-2">{index + 1}</td>
                     <td className="py-3 px-2">{b.tourName}</td>
@@ -174,12 +187,14 @@ const Bookings = () => {
                           Mark as Completed
                         </button>
                       ) : (
-                        <button
-                          onClick={() => handleDelete(b._id)}
-                          className="bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded-xl transition-all duration-200 font-[Cinzel]"
-                        >
-                          Delete
-                        </button>
+                        role === "admin" && (
+                          <button
+                            onClick={() => handleDelete(b._id)}
+                            className="bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded-xl transition-all duration-200 font-[Cinzel]"
+                          >
+                            Delete
+                          </button>
+                        )
                       )}
                     </td>
                   </tr>
@@ -203,7 +218,7 @@ const Bookings = () => {
             bookings.map((b, index) => (
               <div
                 key={b._id}
-                className="bg-[#004d33]/80 rounded-xl p-4 text-green-100 flex flex-col gap-2 shadow-md"
+                className="bg-[#005a3c]/80 rounded-xl p-4 text-green-100 flex flex-col gap-2 shadow-md"
               >
                 <div className="flex justify-between text-sm">
                   <span className="font-semibold">#{index + 1}</span>
@@ -226,12 +241,14 @@ const Bookings = () => {
                       Complete
                     </button>
                   ) : (
-                    <button
-                      onClick={() => handleDelete(b._id)}
-                      className="flex-1 bg-red-500 hover:bg-red-700 text-white py-1 rounded-xl text-sm transition-all"
-                    >
-                      Delete
-                    </button>
+                    role === "admin" && (
+                      <button
+                        onClick={() => handleDelete(b._id)}
+                        className="flex-1 bg-red-500 hover:bg-red-700 text-white py-1 rounded-xl text-sm transition-all"
+                      >
+                        Delete
+                      </button>
+                    )
                   )}
                 </div>
               </div>
