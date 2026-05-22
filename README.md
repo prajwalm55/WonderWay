@@ -1,100 +1,226 @@
-# Travely - Travel Booking System
+# 🌍 Travely — Full Stack Travel Booking System
 
-A modern **travel booking web application** built with **React (Vite)** for the frontend and **Node.js/Express** for the backend.  
-This project is designed for final year college submission and includes features like booking confirmation, QR ticket generation, premium UI, and responsive design.
+Travely is a modern full-stack travel booking web application built using the **MERN Stack**.  
+The platform allows users to explore destinations, book tours, manage bookings, verify tickets, and experience a premium responsive UI with real-world functionalities.
+
+This project was developed as a final-year college project with a strong focus on modern UI/UX, authentication, booking workflows, dashboard management, and production-level features.
 
 ---
 
-## 🔹 Features
+## 🚀 Live Demo
+
+🔗 https://travely-management-system-frontend.onrender.com
+
+---
+
+## ✨ Core Features
+
+### 🌐 User Features
+
+- 🌍 Browse Travel Destinations
+- 🔎 Search & Explore Tours
+- 🎟️ Book Travel Packages
+- 💳 Razorpay Payment Integration (Test Mode)
+- 📄 Download PDF Ticket
+- 🔳 QR Code Ticket Generation
+- 📧 Booking Confirmation Emails
+- ❌ Booking Cancellation System
+- 📡 Live Booking Status Tracking
+- 🎟️ Booking Verification System
+- 👤 User Authentication & Profile Management
+- 🖼️ Profile Photo Upload & Update
+- 📱 Fully Responsive Design
+
+---
+
+### ⚙️ Admin Dashboard Features
+
+- 📊 Admin Dashboard Panel
+- ➕ Create New Bookings
+- 📝 Update Booking Details
+- ❌ Delete Bookings
+- 👥 Manage Users
+- 📡 Live Booking Status Management
+- 🛡️ Protected Admin Routes
+
+---
+
+### 🎟️ Booking Verification System
+
+Users can verify booking details using:
+
+- Booking ID Verification
+- QR Code Verification
+- Real-Time Booking Information Lookup
+
+---
+
+## 🎨 UI/UX Features
+
+- ✨ Premium Modern UI Design
+- 🌙 Dark Green Theme
+- ⚡ Smooth Page Animations
+- 🎬 Framer Motion Effects
+- 📱 Fully Responsive Layout
+- 🔔 Toast Notifications
+- 🧭 Interactive Navigation
+- 💎 Modern Cards & Hover Effects
+
+---
+
+## 🛠️ Tech Stack
 
 ### Frontend
-- React + Vite setup with fast HMR
-- TailwindCSS for styling with custom premium themes
-- Premium loader and animations using Framer Motion
-- Fully responsive design (desktop, tablet, mobile)
-- Booking confirmation page with downloadable PDF ticket
-- QR code generation for each booking
-- Profile and authentication management
-- Smooth navbar, interactive cards, and hover effects
+
+<p align="left">
+  <img src="https://skillicons.dev/icons?i=react,vite,tailwind,js" />
+</p>
+
+- React.js
+- Vite
+- Tailwind CSS
+- Framer Motion
+- React Router DOM
+- React Toastify
+- react-qr-code
+
+---
 
 ### Backend
-- Node.js + Express REST API
-- MongoDB for booking and user data
-- Booking creation, fetching, verification endpoints
-- Real-time toast notifications
-- Error handling and validation
-- JWT-based authentication for secure login
-  
+
+<p align="left">
+  <img src="https://skillicons.dev/icons?i=nodejs,express,mongodb" />
+</p>
+
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- JWT Authentication
+- Multer
+- Nodemailer
+- Razorpay
+- CORS
+
 ---
 
-## 🔹 Installation
+### Additional Tools
 
-### Frontend
+- jsPDF
+- html2canvas
+- Git & GitHub
+- MongoDB Atlas
+
+---
+
+## 🚀 Getting Started
+
+### 1️⃣ Clone Repository
+
+```bash
+git clone https://github.com/harshal-patil-dev/Travely-Management-System.git
+```
+
+---
+
+## ⚙️ Frontend Setup
+
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-### Backend
+---
+
+## ⚙️ Backend Setup
+
 ```bash
 cd backend
 npm install
 node server.js
 ```
-### Open http://localhost:5173 to view the app in the browser.
 
-🔹 Usage
+---
 
-Booking a Tour:
+## 🌐 Open in Browser
 
-Navigate to Home → Select a tour → Fill details → Confirm booking.
-On confirmation, you will see a ticket page with QR code.
-Download Ticket:
+```bash
+http://localhost:5173
+```
 
-Click the “⬇ Download Ticket” button to get a PDF version.
-Profile Management:
+---
 
-Sign in / Register → Access your bookings → View / Check ticket.
-Verify Booking:
+## 🎟️ Booking Workflow
 
-Scan the QR code on ticket → Redirects to verification page.
+1️⃣ Explore travel destinations  
+2️⃣ Search and select a tour  
+3️⃣ Fill booking details  
+4️⃣ Complete payment using Razorpay  
+5️⃣ Confirm booking  
+6️⃣ Receive booking confirmation email  
+7️⃣ Generate QR-based ticket  
+8️⃣ Download PDF ticket  
+9️⃣ Verify booking status anytime
 
+---
 
-🔹 Technologies Used
+## 📸 Project Preview
 
-Frontend:
+<p align="center">
+  <img src="SCREENSHOT_LINK_1" width="400"/>
+  <img src="SCREENSHOT_LINK_2" width="400"/>
+</p>
 
-React + Vite
-TailwindCSS
-Framer Motion
-react-qr-code
-react-toastify
-react-router-dom
+<p align="center">
+  <img src="SCREENSHOT_LINK_3" width="400"/>
+  <img src="SCREENSHOT_LINK_4" width="400"/>
+</p>
 
-Backend:
-Node.js + Express
-MongoDB + Mongoose
-JWT Authentication
-CORS
+<p align="center">
+  <img src="SCREENSHOT_LINK_5" width="400"/>
+  <img src="SCREENSHOT_LINK_6" width="400"/>
+</p>
 
-Other Tools:
-ESLint
-jsPDF + html2canvas (for ticket PDF)
-Git / GitHub
+---
 
+## 🌟 Key Highlights
 
-🔹 Deployment
+- Full Stack MERN Application
+- Real-World Booking Workflow
+- Razorpay Payment Integration
+- Admin Dashboard Management
+- QR-Based Ticket Verification
+- PDF Ticket Generation
+- Email Notification System
+- Responsive Premium UI
+- Authentication & Authorization
+- Production Deployment
 
+---
 
-🔹 Author
+## 🌐 Deployment
 
-Harshal patil – Final Year College Project
+### Frontend
+- Hosted on Render
 
-Email: harshEditz79@gmail.com.com
+### Backend
+- Hosted on Render
 
-GitHub: https://github.com/harshal-patil-dev
+### Database
+- MongoDB Atlas
 
-Project Live: https://travely-management-system-frontend.onrender.com
+---
 
+## 👨‍💻 Author
 
+### Harshal Patil
+
+- GitHub: https://github.com/harshal-patil-dev
+- LinkedIn: https://www.linkedin.com/in/harshal-patil-dev
+
+---
+
+## 📄 License
+
+This project was developed for educational, portfolio, and learning purposes.
