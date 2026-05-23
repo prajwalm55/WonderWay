@@ -18,12 +18,10 @@ const ACCENT_WARNING = "#facc15";
 
 // Helper function to show toast notifications
 const notify = (message, type = "success", id = "booking-alert") => {
-  toast.dismiss(id); // Clear existing toast with same id
-
+  toast.dismiss(id);
   let styleProps = {};
   let toastFn = toast.success;
 
-  // Set toast style based on type
   switch (type) {
     case "error":
       toastFn = toast.error;
@@ -63,9 +61,9 @@ const notify = (message, type = "success", id = "booking-alert") => {
 
 // Booking component
 const Booking = ({ price, title, reviewsArray, avgRating }) => {
-  const currentDate = new Date().toISOString().split("T")[0]; // Get today's date
+  const currentDate = new Date().toISOString().split("T")[0]; 
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext); // Get logged-in user
+  const { user } = useContext(AuthContext); 
 
   // Booking form state
   const [data, setData] = useState({
