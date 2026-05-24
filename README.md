@@ -167,10 +167,12 @@ npm start
 Create a `.env` file inside the backend and frontend and add:
 
 ```env frontend
+# frontend
 VITE_BASE_URL=your_backend_url/api
 ```
 
 ```env backend
+# backend
 SECRET_KEY=your_secret_key
 JWT_EXPIRE_TIME=7d
 
