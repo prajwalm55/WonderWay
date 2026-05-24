@@ -1,20 +1,14 @@
 # 🌍 Travely — Full Stack Travel Booking System
 
-Travely is a modern full-stack travel booking web application built using the **MERN Stack**.
+Travely is a full-stack travel booking web application built using the MERN Stack.
 
-The platform allows users to explore destinations, book tours, manage bookings, verify tickets, download tickets, and experience a premium responsive UI with real-world functionalities.
-
-This project focuses on modern UI/UX, authentication, booking workflows, payment integration, dashboard management, and production-level features.
+Users can explore tours, book travel packages, make payments, download tickets, verify bookings, manage profiles, and enjoy a modern responsive UI with real-world features.
 
 ---
 
 # 🚀 Live Demo
 
-### 🌐 Frontend
-https://travely-management-system-frontend.onrender.com
-
-### ⚙️ Backend API
-https://travely-management-system-backend.onrender.com
+https://travely-management-system-frontend.onrender.com/
 
 ---
 
@@ -51,125 +45,22 @@ https://travely-management-system-backend.onrender.com
 
 ---
 
-# 🎟️ Complete Booking Workflow
+# 🎟️ Booking Workflow
 
-## 🧭 Step 1 — Explore Tours
+1️⃣ Explore and select a tour package  
+2️⃣ Fill booking details  
+3️⃣ Click **Proceed To Payment**  
+4️⃣ Complete payment using Razorpay Test Mode  
+5️⃣ Booking gets verified automatically  
+6️⃣ PDF ticket & QR code get generated  
+7️⃣ Download ticket anytime  
+8️⃣ Verify booking using Booking Code or QR Code  
+9️⃣ Cancel booking and track live status updates  
 
-- Open the homepage
-- Search destinations or explore available travel packages
-- Select any tour package
-
----
-
-## 📝 Step 2 — Fill Booking Details
-
-- Click on **Book Now**
-- Fill booking form details:
-  - Full Name
-  - Phone Number
-  - Date
-  - Number of Persons
-
----
-
-## 💳 Step 3 — Razorpay Payment Process (Test Mode)
-
-After filling booking details:
-
-- Click on **Proceed To Payment**
-- A secure payment popup will open
-
-Example:
-
-```bash
-Secure Payment Gateway
-Total Amount: ₹10000.00
-Pay Now with Razorpay
-```
-
-### 👉 Important
-
-Since Razorpay is currently running in **Test Mode**, please use the following demo flow for testing payments.
-
----
-
-## 🏦 Demo Payment Steps
-
-1️⃣ Click **Pay Now with Razorpay**
-
-2️⃣ Razorpay payment page will open
-
-3️⃣ Select:
-
-```bash
-Netbanking
-```
-
-4️⃣ Choose any demo bank
-
-Example:
-
-```bash
-Bank of Baroda
-```
-
-5️⃣ A demo bank page will open like this:
-
-```bash
-Welcome to Razorpay Software Private Ltd Bank
-This is just a demo bank page.
-```
-
-6️⃣ Choose:
-
-```bash
-Success
-```
-
-7️⃣ Payment verification will process automatically
-
-8️⃣ Booking will be created successfully
-
----
-
-## 🎫 Step 4 — Ticket Generation
-
-After successful payment:
-
-- Booking gets verified
-- Ticket gets generated automatically
-- QR Code gets generated
-- User can download the PDF ticket
-
----
-
-## 🔍 Step 5 — Booking Verification
-
-Users can verify booking details using:
-
-- Booking Code
-- QR Code Verification
-
-### Verification Flow
-
-1️⃣ Open verification page
-
-2️⃣ Scan QR Code from ticket  
-OR
-
-3️⃣ Enter Booking Code manually
-
-4️⃣ Check booking status in real time
-
----
-
-## ❌ Step 6 — Booking Cancellation
-
-Users can also:
-
-- Cancel bookings
-- Track updated booking status
-- View cancellation updates instantly
+> ⚠️ Razorpay is currently running in **Test Mode**.  
+> For demo payments, select:
+>
+> `Netbanking → Any Demo Bank → Success`
 
 ---
 
@@ -292,8 +183,6 @@ http://localhost:5173
 ```
 
 ---
-
-# 📸 Project Screenshots
 
 # 📸 Project Screenshots
 
