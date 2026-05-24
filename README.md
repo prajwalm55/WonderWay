@@ -164,9 +164,13 @@ npm start
 
 # 🔑 Environment Variables (.env)
 
-Create a `.env` file inside the backend folder and add:
+Create a `.env` file inside the backend and frontend and add:
 
-```env
+```env frontend
+VITE_BASE_URL=your_backend_url/api
+```
+
+```env backend
 SECRET_KEY=your_secret_key
 JWT_EXPIRE_TIME=7d
 
