@@ -1,8 +1,8 @@
 # 🌍 Travely — Full Stack Travel Booking System
 
-Travely is a full-stack travel booking web application built using the MERN Stack.
+A modern full-stack travel booking web application built using MERN Stack (React + Node.js + Express + MongoDB).
 
-Users can explore tours, book travel packages, make payments, download tickets, verify bookings, manage profiles, and enjoy a modern responsive UI with real-world features.
+It supports tour booking, payments, QR ticket generation, PDF downloads, email notifications, and admin management — designed as a real-world project and final year submission.
 
 ---
 
