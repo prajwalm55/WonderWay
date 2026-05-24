@@ -6,9 +6,11 @@ Users can explore tours, book travel packages, make payments, download tickets, 
 
 ---
 
-# 🚀 Live Demo
+## 🚀 Live Demo
 
-https://travely-management-system-frontend.onrender.com/
+<a href="https://travely-management-system-frontend.onrender.com" target="_blank">
+  🌍 Open Travely Live Demo
+</a>
 
 ---
 
@@ -16,20 +18,43 @@ https://travely-management-system-frontend.onrender.com/
 
 ## 🌐 User Features
 
-- 🌍 Browse Travel Destinations
-- 🔎 Search & Explore Tours
-- ⭐ Users Can Add Tour Reviews & Ratings
+- 🌍 Browse & Explore Travel Destinations
+- 🔎 Search Tours & Travel Packages
+- ⭐ Add Tour Reviews & Ratings
 - 🎟️ Book Travel Packages
 - 💳 Razorpay Payment Integration (Test Mode)
-- 📄 Download PDF Ticket
-- 🔳 QR Code Ticket Generation
-- 📧 Booking Confirmation Emails
-- ❌ Booking Cancellation System
+- 📧 Booking Confirmation Email System
 - 📡 Live Booking Status Tracking
 - 🎟️ Booking Verification System
-- 👤 User Authentication & Profile Management
-- 🖼️ Profile Photo Upload & Username Update
+- ❌ Booking Cancellation Feature
+
+---
+
+## 🎫 Ticket & Verification Features
+
+- 📄 Download PDF Ticket
+- 🔳 QR Code Ticket Generation
+- 🔍 QR-Based Booking Verification
+- 🧾 Booking Code Verification
+
+---
+
+## 👤 Authentication & Profile
+
+- 🔐 User Authentication System
+- 👤 User Profile Management
+- 🖼️ Profile Photo Upload
+- ✏️ Username Update System
+
+---
+
+## 🎨 UI/UX Features
+
+- 🌙 Premium Dark Green UI Theme
+- ⚡ Smooth Animations & Effects
 - 📱 Fully Responsive Design
+- 🔔 Toast Notifications
+- 💎 Modern Cards & Layouts
 
 ---
 
@@ -61,19 +86,6 @@ https://travely-management-system-frontend.onrender.com/
 > For demo payments, select:
 >
 > `Netbanking → Any Demo Bank → Success`
-
----
-
-# 🎨 UI/UX Features
-
-- ✨ Premium Modern UI Design
-- 🌙 Dark Green Theme
-- ⚡ Smooth Page Animations
-- 🎬 Framer Motion Effects
-- 📱 Fully Responsive Layout
-- 🔔 Toast Notifications
-- 🧭 Interactive Navigation
-- 💎 Modern Cards & Hover Effects
 
 ---
 
@@ -192,13 +204,13 @@ http://localhost:5173
 </p>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/294061e2-ec42-45c4-8c0f-6691a00dcc92" width="400"/>
+  <img src="https://github.com/user-attachments/assets/a00e7485-3522-48c6-971f-f115451b249a" width="400"/>
   <img src="https://github.com/user-attachments/assets/e07352c6-710f-450f-8a51-ee6757c89781" width="400"/>
 </p>
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/1f824e74-a727-470b-a436-faf11fb117c9" width="400"/>
-  <img src="https://github.com/user-attachments/assets/dede2710-23a4-456b-837e-2d114491e0c5" width="400"/>
+  <img src="https://github.com/user-attachments/assets/c5f0919f-b540-48c0-bec8-00325455508b" width="400"/>
 </p>
 
 <p align="center">
