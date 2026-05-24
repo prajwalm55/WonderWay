@@ -8,9 +8,7 @@ Users can explore tours, book travel packages, make payments, download tickets, 
 
 ## 🚀 Live Demo
 
-<a href="https://travely-management-system-frontend.onrender.com" target="_blank">
-  🌍 Open Travely Live Demo
-</a>
+🔗 https://travely-management-system-frontend.onrender.com
 
 ---
 
@@ -222,18 +220,17 @@ http://localhost:5173
 
 # 🌟 Key Highlights
 
-- Full Stack MERN Application
-- Real-World Booking Workflow
-- User Review & Rating System
+- Full Stack MERN Project
+- Complete Tour Booking Workflow
 - Razorpay Payment Integration
-- Admin Dashboard Management
-- QR-Based Ticket Verification
-- PDF Ticket Generation
+- QR & PDF Ticket System
+- User Reviews & Ratings
+- Admin Dashboard
+- Booking Verification & Cancellation
 - Email Notification System
-- Responsive Premium UI
 - Authentication & Authorization
-- Production Deployment
-
+- Responsive Modern UI
+  
 ---
 
 # 🌐 Deployment
