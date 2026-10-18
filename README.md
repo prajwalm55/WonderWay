@@ -263,14 +263,7 @@ http://localhost:5173
 📍 MICO Layout, Bangalore, India
 🌐 [veelgen.tech](https://veelgen.tech)
 
-### GitHub
-https://github.com/your-username
-
-### LinkedIn
-https://www.linkedin.com/in/your-profile
 
 ---
 
-# 📄 License
 
-This project was developed for educational, portfolio, and learning purposes.
