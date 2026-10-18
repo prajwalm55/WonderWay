@@ -74,7 +74,7 @@ const Header = ({ triggerLoader }) => {
           <div className="rounded-full p-[3px] border-2 border-white">
             <img src={Logo} alt="Logo" className="w-12 h-12 rounded-full" />
           </div>
-          <span className="text-white text-2xl font-semibold">Travely</span>
+          <span className="text-white text-2xl font-semibold">WanderWay</span>
         </div>
 
         {/* Desktop Nav */}

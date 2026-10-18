@@ -1,7 +1,7 @@
 {
-  "name": "backend",
+  "name": "wanderway-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "WanderWay — Full Stack Travel Booking Platform by Prajwal M",
   "type": "module",
   "main": "index.js",
   "scripts": {
@@ -12,8 +12,8 @@
     "client-install": "cd client && npm install",
     "client-build": "cd client && npm run build"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["travel", "booking", "mern", "wanderway"],
+  "author": "Prajwal M <support@veelgen.tech>",
   "license": "ISC",
   "dependencies": {
     "@sendgrid/mail": "^8.1.6",

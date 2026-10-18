@@ -1,14 +1,16 @@
-# 🌍 Travely — Full Stack Travel Booking System
+# 🌍 WanderWay — Full Stack Travel Booking Platform
 
 A modern full-stack travel booking web application built using MERN Stack (React + Node.js + Express + MongoDB).
 
-It supports tour booking, payments, QR ticket generation, PDF downloads, email notifications, and admin management — designed as a real-world project and final year submission.
+It supports tour booking, payments, QR ticket generation, PDF downloads, email notifications, and admin management — built as a solo project by **Prajwal M** at [Veelgen Tech](https://veelgen.tech).
 
 ---
 
 ## 🚀 Live Demo
 
-🔗 https://travely-management-system-frontend.onrender.com
+🔗 *(Add your deployment URL here)*
+
+🌐 [veelgen.tech](https://veelgen.tech)
 
 ---
 
@@ -254,13 +256,18 @@ http://localhost:5173
 
 # 👨‍💻 Author
 
-## Harshal Patil
+## Prajwal M
+
+📧 support@veelgen.tech
+📞 +91 63606 67440
+📍 MICO Layout, Bangalore, India
+🌐 [veelgen.tech](https://veelgen.tech)
 
 ### GitHub
-https://github.com/harshal-patil-dev
+https://github.com/your-username
 
 ### LinkedIn
-https://www.linkedin.com/in/harshal-patil-dev
+https://www.linkedin.com/in/your-profile
 
 ---
 

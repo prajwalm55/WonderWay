@@ -66,10 +66,10 @@ export const bookingConfirmedEmail = (booking) => `
         <td style="padding:8px; border:1px solid #ddd;">${booking.date}</td>
       </tr>
     </table>
-    <p style="margin-top:20px;">Thank you for choosing Travely. We wish you an unforgettable journey! 🌟</p>
+    <p style="margin-top:20px;">Thank you for choosing WanderWay. We wish you an unforgettable journey! 🌟</p>
   </div>
   <div style="background:#f0f0f0; text-align:center; padding:15px; color:#555; font-size:12px;">
-    Travely Booking Service, Amalner, India
+    WanderWay — Veelgen Tech | support@veelgen.tech
   </div>
 </div>
 `;
@@ -107,7 +107,7 @@ export const bookingCancelledEmail = (booking) => `
     </p>
   </div>
   <div style="background:#f0f0f0; text-align:center; padding:15px; color:#555; font-size:12px;">
-    Travely Booking Service, Amalner, India
+    WanderWay — Veelgen Tech | support@veelgen.tech
   </div>
 </div>
 `;

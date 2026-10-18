@@ -273,13 +273,13 @@ const Booking = ({ price, title, reviewsArray, avgRating }) => {
           </h2>
           <motion.img
             src={ticketImg}
-            alt="Travely Ticket"
+            alt="WanderWay Ticket"
             className="rounded-xl shadow-2xl shadow-black/50 mx-auto w-full max-w-[500px] sm:max-w-[400px] xs:max-w-[300px] border border-green-700/40"
             whileHover={{ scale: 1.03 }}
             transition={{ type: "spring", stiffness: 80 }}
           />
           <p className="mt-4 text-gray-300 text-base italic font-medium" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            ✈️ Secure Booking – Travely | Today's Date: {currentDate}
+            ✈️ Secure Booking – WanderWay | Today's Date: {currentDate}
           </p>
         </motion.div>
       </motion.div>

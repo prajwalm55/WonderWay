@@ -14,7 +14,7 @@ const Testimonials = () => {
 
   // Testimonials content
   const testimonialsData = [
-    { name: "Yash Patil", description: "Travely made our trip unforgettable! Everything was perfectly organized." },
+    { name: "Yash Patil", description: "WanderWay made our trip unforgettable! Everything was perfectly organized." },
     { name: "Harish Mahajan", description: "Amazing experience! Friendly team, smooth process, and breathtaking destinations." },
     { name: "Yogesh Bhai", description: "Professional staff and smooth travel. Highly recommended for stress-free vacations." },
     { name: "Bhavesh Patil", description: "Effortless journey from planning to execution. Truly enjoyable experience!" },

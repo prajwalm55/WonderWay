@@ -98,7 +98,7 @@
 //       format: [canvas.width, canvas.height],
 //     });
 //     pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
-//     pdf.save(`Travely-UpdatedTicket-${id}.pdf`);
+//     pdf.save(`WanderWay-UpdatedTicket-${id}.pdf`);
 //   };
 
 //   if (!booking) return <p>Loading booking...</p>;
@@ -149,7 +149,7 @@
 //                   fontFamily: "'Cinzel Decorative', cursive",
 //                 }}
 //               >
-//                 Travely
+//                 WanderWay
 //               </span>
 //               <div
 //                 style={{
@@ -246,7 +246,7 @@
 //                     fontSize: "16px",
 //                   }}
 //                 >
-//                   Travely
+//                   WanderWay
 //                 </span>
 //               </div>
 //               <QRCode value={id} size={95} bgColor="transparent" fgColor="#000" />

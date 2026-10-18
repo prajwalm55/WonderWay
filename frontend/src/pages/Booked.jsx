@@ -113,7 +113,7 @@ const handleDownloadTicket = async () => {
       undefined,
       "FAST"
     );
-    pdf.save("Travely-Ticket.pdf");
+    pdf.save("WanderWay-Ticket.pdf");
 
     notify(
       "Ticket Downloaded Successfully!",
@@ -192,7 +192,7 @@ const Booked = () => {
       try {
         if (!booking && bookingId) {
           const res = await axios.get(
-            `https://travely-management-system-backend.onrender.com/api/booking/${bookingId}`
+            `${import.meta.env.VITE_BASE_URL || "http://localhost:5000/api"}/booking/${bookingId}`
           );
           if (res?.data?.success && !cancelled) {
             setBooking(res.data.data);
@@ -260,7 +260,7 @@ const Booked = () => {
 
   const activePositions = isMobile ? MOBILE_POSITIONS : POSITIONS;
 
-  const QR_LINK = `https://travely-management-system-frontend.onrender.com/verify-booking/${
+  const QR_LINK = `${import.meta.env.VITE_FRONTEND_URL || "http://localhost:5173"}/verify-booking/${
     booking?.bookingCode || bookingId
   }`;
 
@@ -335,7 +335,7 @@ const Booked = () => {
                   fontFamily: "'Cinzel Decorative', cursive",
                 }}
               >
-                Travely
+                WanderWay
               </span>
               <div
                 style={{
@@ -345,7 +345,7 @@ const Booked = () => {
                   marginTop: "1px",
                 }}
               >
-                Travely Booking Service
+                WanderWay — Veelgen Tech
               </div>
             </div>
 

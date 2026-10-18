@@ -28,7 +28,7 @@ const Newsletter = () => {
         className="text-white text-base sm:text-lg font-semibold"
         style={{ fontFamily: "'Cinzel', serif" }}
       >
-        Subscribe To Travely
+        Subscribe To WanderWay
       </h3>
 
       {/* Email input and subscribe button */}
@@ -75,7 +75,7 @@ const Footer = () => {
           <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-full overflow-hidden">
             <img
               src={Logo}
-              alt="Travely Logo"
+              alt="WanderWay Logo"
               className="h-full w-full object-contain"
               style={{ filter: "brightness(0) invert(1)" }}
             />
@@ -84,7 +84,7 @@ const Footer = () => {
             className="text-white text-2xl sm:text-3xl font-bold tracking-wide"
             style={{ fontFamily: "'Cinzel', serif" }}
           >
-            Travely
+            WanderWay
           </h2>
         </div>
 
@@ -122,25 +122,39 @@ const Footer = () => {
           className="text-sm lg:text-base font-medium"
           style={{ fontFamily: "'Cormorant Garamond', serif" }}
         >
-          Travely Booking Service, Amalner, India
+          Veelgen Tech, MICO Layout, Bangalore, India
         </p>
         <p
           className="text-sm lg:text-base font-medium"
           style={{ fontFamily: "'Cormorant Garamond', serif" }}
         >
-          📞 +91 93224 14106
+          📞 +91 63606 67440
         </p>
         <p
           className="text-sm lg:text-base font-medium"
           style={{ fontFamily: "'Cormorant Garamond', serif" }}
         >
-          📧 info@Travely.com
+          📧 support@veelgen.tech
+        </p>
+        <p
+          className="text-sm lg:text-base font-medium"
+          style={{ fontFamily: "'Cormorant Garamond', serif" }}
+        >
+          🌐{" "}
+          <a
+            href="https://veelgen.tech"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-green-300 underline underline-offset-2 transition-colors"
+          >
+            veelgen.tech
+          </a>
         </p>
         <p
           className="pt-2 text-xs lg:text-sm text-gray-400 font-medium"
           style={{ fontFamily: "'Cormorant Garamond', serif" }}
         >
-          © 2025 Travely. All rights reserved.
+          © 2025 WanderWay. All rights reserved.
         </p>
       </div>
     </footer>

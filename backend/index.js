@@ -41,9 +41,8 @@ mongoose
 const allowedOrigins = [
   "http://localhost:5173",
   "http://192.168.43.113:5173",
-  "https://travely-management-system-backend.onrender.com",
-  "https://travely-management-system-frontend.onrender.com",
-];
+  process.env.FRONTEND_URL,       // set this in your .env when deploying
+].filter(Boolean);
 
 app.use(
   cors({

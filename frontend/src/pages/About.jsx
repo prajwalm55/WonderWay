@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import PageWrapper from "../components/PageWrapper";
 import back4 from "../assets/images/bac4.png";
 
-// Profile image (ONLY YOU)
-import ProfileHarshal from "../assets/images/my-photo-v2.png";
+// Profile image placeholder — replace with your own photo
+// import ProfilePhoto from "../assets/images/your-photo.png";
 
 // --- THEME CONSTANTS ---
 const PREMIUM_ACCENT_GREEN = "#6ee7b7";
@@ -66,7 +66,7 @@ const About = () => {
           className="text-green-100 text-base sm:text-lg md:text-xl max-w-2xl text-center mb-14 leading-relaxed"
           style={{ fontFamily: "'Cormorant Garamond', serif" }}
         >
-          Travely is a complete travel booking platform designed and developed
+          WanderWay is a complete travel booking platform designed and developed
           as a solo project with a strong focus on performance, security, and a
           premium user experience.
         </motion.p>
@@ -117,27 +117,28 @@ const About = () => {
           Project <span style={{ color: "#00a86b" }}>Creator</span>
         </motion.h2>
 
-        {/* SINGLE CREATOR CARD */}
+        {/* SINGLE CREATOR CARD — fill in your own details */}
         <motion.div
           variants={fadeUp}
           initial="hidden"
           animate="visible"
           custom={1.2}
           whileHover={{ scale: 1.03, y: -4 }}
-          className="flex flex-col items-center text-green-100 p-8 md:p-10 rounded-2xl 
+          className="flex flex-col items-center text-green-100 p-8 md:p-10 rounded-2xl
              w-full sm:w-[420px] md:w-[520px]"
           style={{
             background: "rgba(18, 55, 42, 0.95)",
             border: `1px solid ${PREMIUM_ACCENT_GREEN}40`,
           }}
         >
-          <div className="relative w-32 h-32 md:w-36 md:h-36 mb-5 rounded-full overflow-hidden profile-container">
+          {/* Add your photo: import it above and uncomment below */}
+          {/* <div className="relative w-32 h-32 md:w-36 md:h-36 mb-5 rounded-full overflow-hidden profile-container">
             <img
-              src={ProfileHarshal}
-              alt="Harshal Patil"
+              src={ProfilePhoto}
+              alt="Your Name"
               className="w-full h-full object-cover rounded-full shadow-lg"
             />
-          </div>
+          </div> */}
 
           <h3
             className="font-bold text-xl md:text-2xl text-center"
@@ -146,17 +147,32 @@ const About = () => {
               color: PREMIUM_ACCENT_GREEN,
             }}
           >
-            Harshal Patil
+            Prajwal M
           </h3>
 
           <p
             className="text-green-300 mt-2 text-center text-sm md:text-base max-w-xl"
             style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >
-            Full Stack Developer & Project Owner
+            Full Stack Developer &amp; Founder, Veelgen Tech
             <br />
-            Built Travely as a solo project.
+            Built WanderWay as a solo project.
           </p>
+
+          {/* Contact & portfolio links */}
+          <div className="mt-4 flex flex-col items-center gap-1 text-sm text-green-200" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <span>📧 support@veelgen.tech</span>
+            <span>📞 +91 63606 67440</span>
+            <a
+              href="https://veelgen.tech"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-1 px-4 py-1 rounded-full border border-green-500 text-green-300 hover:bg-green-700 hover:text-white transition-all text-xs tracking-wide"
+              style={{ fontFamily: "'Cinzel', serif" }}
+            >
+              🌐 veelgen.tech
+            </a>
+          </div>
         </motion.div>
       </section>
 

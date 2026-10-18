@@ -64,7 +64,7 @@ const VerifyBooking = () => {
 
     try {
       const res = await axios.get(
-        `https://travely-management-system-backend.onrender.com/api/booking/code/${enteredId}`
+        `${import.meta.env.VITE_BASE_URL || "http://localhost:5000/api"}/booking/code/${enteredId}`
       );
 
       const booking = res.data.data;

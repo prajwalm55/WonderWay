@@ -148,7 +148,7 @@ const Payment = () => {
       key: RAZORPAY_KEY_ID,
       amount: order.amount,
       currency: order.currency,
-      name: "Travely Booking Service",
+      name: "WanderWay — Veelgen Tech",
       description: `Payment for ${bookingDetails.tourName}`,
       order_id: order.id,
 

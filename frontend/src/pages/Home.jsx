@@ -173,7 +173,7 @@ const Home = ({ galleryScrollRef }) => {
             }}
           >
             Hear from our travelers about their unforgettable experiences with
-            Travely.
+            WanderWay.
           </p>
           <Testimonials />
         </div>
