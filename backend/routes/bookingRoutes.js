@@ -5,25 +5,13 @@ import {
   getBooking,
   getAllBookings,
   completeBooking,
-  createOrder,
-  verifyPayment,
   cancelBooking
 } from "../controllers/bookingController.js";
 import { verifyToken, verifyAdmin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// ----------------------------
-// PAYMENT ROUTES
-// ----------------------------
-router.post("/create-order", (req, res) => {
-  console.log("🟡 [ROUTER] /create-order called, body:", req.body);
-  createOrder(req, res);
-});
-router.post("/verify-payment", (req, res) => {
-  console.log("🟡 [ROUTER] /verify-payment called, body:", req.body);
-  verifyPayment(req, res);
-});
+// Razorpay routes are intentionally disabled until payment configuration is provided.
 
 // ----------------------------
 // BOOKING ROUTES

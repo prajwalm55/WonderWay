@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import Router from "../../router/Router";
+import { AuthContext } from "../../context/AuthContext";
 
 const HEADER_HEIGHT = 80;
 const FOOTER_HEIGHT = 200;
 
 const Layout = ({ triggerLoader }) => {
+  const { role } = useContext(AuthContext);
   const [hideAll, setHideAll] = useState(true);
 
   useEffect(() => {
@@ -29,7 +31,7 @@ const Layout = ({ triggerLoader }) => {
         <Router triggerLoader={triggerLoader} />
       </main>
 
-      <Footer style={{ flexShrink: 0 }} />
+      {role !== "admin" && <Footer style={{ flexShrink: 0 }} />}
     </div>
   );
 };

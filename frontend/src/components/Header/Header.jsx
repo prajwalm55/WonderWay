@@ -9,7 +9,7 @@ import { toast, Slide } from "react-toastify";
 import "./Header.css";
 
 const Header = ({ triggerLoader }) => {
-  const { user, dispatch } = useContext(AuthContext);
+  const { user, role, dispatch } = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -31,7 +31,7 @@ const Header = ({ triggerLoader }) => {
       style: { background: "#004d33", color: "#f4fff4", borderRadius: "12px" },
     });
 
-    setTimeout(() => navigate("/home"), 300);
+    setTimeout(() => navigate("/login"), 300);
   };
 
   // Scroll effect
@@ -55,7 +55,19 @@ const Header = ({ triggerLoader }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const navItems = ["Home", "About", "Tours", "Gallery", "Contact"];
+  const navItems = role === "admin"
+    ? [
+        { label: "Dashboard", path: "/admin" },
+        { label: "Bookings", path: "/admin/bookings" },
+        { label: "Tours", path: "/admin/tours" },
+      ]
+    : [
+        { label: "Home", path: "/home" },
+        { label: "About", path: "/about" },
+        { label: "Tours", path: "/tours" },
+        { label: "Gallery", path: "/gallery" },
+        { label: "Contact", path: "/contact" },
+      ];
 
   return (
     <header
@@ -79,13 +91,13 @@ const Header = ({ triggerLoader }) => {
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex gap-8 items-center mx-auto">
-          {navItems.map((item, index) => (
+          {navItems.map((item) => (
             <Link
-              key={item}
-              to={`/${item.toLowerCase()}`}
+              key={item.label}
+              to={item.path}
               className="relative text-white font-medium text-lg"
             >
-              <span className="nav-link-animate">{item}</span>
+              <span className="nav-link-animate">{item.label}</span>
             </Link>
           ))}
         </nav>
@@ -95,7 +107,7 @@ const Header = ({ triggerLoader }) => {
           {/* Profile Section */}
           {user && (
             <Link
-              to="/my-account"
+              to={role === "admin" ? "/admin" : "/my-account"}
               className="flex items-center gap-1 bg-white/10 border border-white/30 px-2 py-1 rounded-full text-white font-semibold"
               style={{ height: "38px" }}
             >
@@ -104,7 +116,7 @@ const Header = ({ triggerLoader }) => {
                 alt="Profile"
                 className="w-7 h-7 rounded-full border-2 border-white"
               />
-              <span className="hidden md:inline text-sm">Hi, {user.username}</span>
+              <span className="hidden md:inline text-sm">{role === "admin" ? "Admin" : `Hi, ${user.username}`}</span>
             </Link>
           )}
 
@@ -139,14 +151,14 @@ const Header = ({ triggerLoader }) => {
           menuOpen ? "max-h-[900px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        {navItems.map((item, index) => (
+        {navItems.map((item) => (
           <Link
-            key={item}
-            to={`/${item.toLowerCase()}`}
+            key={item.label}
+            to={item.path}
             onClick={() => setMenuOpen(false)}
             className="relative text-white text-lg font-medium"
           >
-            <span className="nav-link-animate">{item}</span>
+            <span className="nav-link-animate">{item.label}</span>
           </Link>
         ))}
 

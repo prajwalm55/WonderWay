@@ -68,7 +68,7 @@ const CreateTours = () => {
             borderRadius: "12px",
           },
         });
-        navigate("/all-tours");
+        navigate("/admin/tours");
       } else {
         toast.error(message, {
           position: "top-right",

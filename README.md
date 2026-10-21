@@ -12,6 +12,17 @@ It supports tour booking, payments, QR ticket generation, PDF downloads, email n
 
 🌐 [veelgen.tech](https://veelgen.tech)
 
+## 🧪 Local Client Demo Mode
+
+The current presentation build runs without MongoDB. Tours, authentication, reviews, bookings, and admin actions use local in-memory demo data and reset when the backend restarts.
+
+Demo accounts:
+
+- User: `demo@wonderway.local` / `WonderUser@123`
+- Admin: `admin@wonderway.local` / `WonderAdmin@123`
+
+Razorpay is disabled for this demo. The payment screen remains visible but checkout is intentionally unavailable.
+
 ---
 
 # ✨ Core Features
@@ -171,6 +182,8 @@ Create a `.env` file inside the backend and frontend and add:
 ```env frontend
 # frontend
 VITE_BASE_URL=your_backend_url/api
+VITE_FRONTEND_URL=your_frontend_url
+VITE_WEB3FORMS_ACCESS_KEY=your_web3forms_access_key
 ```
 
 ```env backend
@@ -182,14 +195,22 @@ MONGO_URL=your_mongodb_connection_url
 
 BACKEND_URL=http://localhost:4000
 PORT=4000
+NODE_ENV=production
+DEMO_MODE=true
 
-# Razorpay Keys
-RAZORPAY_KEY_ID=your_razorpay_key
-RAZORPAY_KEY_SECRET=your_razorpay_secret
+# Razorpay is currently disabled in the application.
+# RAZORPAY_KEY_ID=your_razorpay_key
+# RAZORPAY_KEY_SECRET=your_razorpay_secret
 
 # Email Configuration
 EMAIL_USER=your_email@gmail.com
 EMAIL_PASS=your_gmail_app_password
+
+# Local demo credentials
+DEMO_USER_EMAIL=demo@wonderway.local
+DEMO_USER_PASSWORD=WonderUser@123
+DEMO_ADMIN_EMAIL=admin@wonderway.local
+DEMO_ADMIN_PASSWORD=WonderAdmin@123
 ```
 
 ---

@@ -1,111 +1,12 @@
 import Booking from "../models/Booking.js";
-import Razorpay from "razorpay";
-import crypto from "crypto";
-import dotenv from "dotenv";
 import mongoose from "mongoose";
 import User from "../models/User.js";
 import { sendEmail, bookingConfirmedEmail, bookingCancelledEmail } from "../utils/email.js";
 
-dotenv.config();
-
-// Initialize Razorpay
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
-
-// ----------------------------
-// 1. CREATE ORDER
-// ----------------------------
-const createOrder = async (req, res) => {
-  console.log("🟡 [CREATE ORDER] Body received:", req.body);
-  const { amount, currency = "INR" } = req.body;
-
-  if (!amount || typeof amount !== "number" || amount <= 0) {
-    console.log("❌ [CREATE ORDER] Invalid amount:", amount);
-    return res.status(400).json({ message: "Invalid amount" });
-  }
-
-  try {
-    const order = await razorpay.orders.create({
-      amount: amount * 100,
-      currency,
-      receipt: "receipt_" + Date.now(),
-    });
-    console.log("✅ [CREATE ORDER] Razorpay order created:", order);
-    res.status(200).json({
-      success: true,
-      orderId: order.id,
-      amount: order.amount,
-      currency: order.currency,
-    });
-  } catch (error) {
-    console.error("❌ [CREATE ORDER] Razorpay Error:", error);
-    res.status(500).json({ message: "Razorpay error", error: error.message });
-  }
-};
-
-// ----------------------------
-// 2. VERIFY PAYMENT + SAVE BOOKING + SEND EMAIL
-// ----------------------------
-const verifyPayment = async (req, res) => {
-  console.log("🟡 [VERIFY PAYMENT] Body received:", req.body);
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, bookingData } = req.body;
-
-  if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !bookingData) {
-    console.log("❌ [VERIFY PAYMENT] Missing required fields");
-    return res.status(400).json({ message: "Missing required fields" });
-  }
-
-  try {
-    const body = razorpay_order_id + "|" + razorpay_payment_id;
-    const expectedSignature = crypto
-      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-      .update(body)
-      .digest("hex");
-
-    console.log("🔹 [VERIFY PAYMENT] Expected signature:", expectedSignature);
-
-    if (expectedSignature !== razorpay_signature) {
-      console.log("❌ [VERIFY PAYMENT] Signature mismatch!");
-      return res.status(400).json({ message: "Payment verification failed" });
-    }
-
-    const newBooking = new Booking({
-      ...bookingData,
-      paymentStatus: "paid",
-      paymentId: razorpay_payment_id,
-      status: "active",
-    });
-
-    console.log("🔹 [VERIFY PAYMENT] Saving booking:", newBooking);
-    await newBooking.save();
-    console.log("✅ [VERIFY PAYMENT] Booking saved successfully");
-
-    User.findById(newBooking.userId)
-      .then(user => {
-        if (user?.email) {
-          console.log("🔹 [VERIFY PAYMENT] Sending email to:", user.email);
-          sendEmail(user.email, "Booking Confirmed ✔", bookingConfirmedEmail(newBooking)).catch(err =>
-            console.error("❌ [VERIFY PAYMENT] Email error:", err)
-          );
-        } else {
-          console.log("❌ [VERIFY PAYMENT] User email not found");
-        }
-      })
-      .catch(err => console.error("❌ [VERIFY PAYMENT] User lookup error:", err));
-
-    res.status(200).json({
-      success: true,
-      message: "Payment verified, booking saved",
-      bookingId: newBooking.bookingCode,
-      data: newBooking,
-    });
-  } catch (error) {
-    console.error("❌ [VERIFY PAYMENT] Error saving booking:", error);
-    res.status(500).json({ message: "Database error", error: error.message });
-  }
-};
+/* Razorpay integration is intentionally disabled for now.
+   The original createOrder and verifyPayment handlers are kept out of the
+   active runtime until payment credentials and the final payment flow are
+   provided. */
 
 // ----------------------------
 // 3. CREATE BOOKING WITHOUT PAYMENT
@@ -292,8 +193,6 @@ const completeBooking = async (req, res) => {
 };
 
 export {
-  createOrder,
-  verifyPayment,
   createBooking,
   getBooking,
   getAllBookings,

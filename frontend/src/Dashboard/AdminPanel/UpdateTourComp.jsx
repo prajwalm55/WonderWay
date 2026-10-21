@@ -85,7 +85,7 @@ const UpdateToursComp = ({ tour, id }) => {
           },
         });
 
-        setTimeout(() => navigate("/all-tours"), 2500);
+        setTimeout(() => navigate("/admin/tours"), 2500);
       } else {
         toast.error(message, {
           position: "top-right",
